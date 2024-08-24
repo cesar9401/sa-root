@@ -1,6 +1,5 @@
-package com.cesar31.root;
+package com.cesar31.root.infrastructure.repository;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +30,6 @@ public class AdmUser {
     @Column(name = "password")
     private String password;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @Column(name = "entry_date")
     private LocalDateTime entryDate;
 }
