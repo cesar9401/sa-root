@@ -1,7 +1,7 @@
-package com.cesar31.root.infrastructure.repository;
+package com.cesar31.root.infrastructure.adapters.output.persistence;
 
 import com.cesar31.root.domain.User;
-import com.cesar31.root.domain.repository.UserRepository;
+import com.cesar31.root.application.ports.output.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

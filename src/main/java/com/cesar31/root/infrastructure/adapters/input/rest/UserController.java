@@ -1,9 +1,9 @@
-package com.cesar31.root.application.rest;
+package com.cesar31.root.infrastructure.adapters.input.rest;
 
-import com.cesar31.root.application.rest.dto.UserRequest;
-import com.cesar31.root.application.rest.dto.UserResponse;
+import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserRequest;
+import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserResponse;
 import com.cesar31.root.domain.User;
-import com.cesar31.root.domain.service.UserService;
+import com.cesar31.root.application.ports.input.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

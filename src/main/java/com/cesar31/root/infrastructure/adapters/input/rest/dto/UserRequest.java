@@ -1,4 +1,4 @@
-package com.cesar31.root.application.rest.dto;
+package com.cesar31.root.infrastructure.adapters.input.rest.dto;
 
 import lombok.Getter;
 import lombok.Setter;

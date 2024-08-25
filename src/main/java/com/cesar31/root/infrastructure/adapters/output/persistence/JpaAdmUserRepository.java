@@ -1,4 +1,4 @@
-package com.cesar31.root.infrastructure.repository;
+package com.cesar31.root.infrastructure.adapters.output.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

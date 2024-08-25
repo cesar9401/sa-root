@@ -1,4 +1,4 @@
-package com.cesar31.root.domain.service;
+package com.cesar31.root.application.ports.input;
 
 import com.cesar31.root.domain.User;
 

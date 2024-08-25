@@ -1,4 +1,4 @@
-package com.cesar31.root.domain.repository;
+package com.cesar31.root.application.ports.output;
 
 import com.cesar31.root.domain.User;
 

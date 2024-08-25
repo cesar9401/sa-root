@@ -1,7 +1,8 @@
 package com.cesar31.root.domain.service;
 
+import com.cesar31.root.application.ports.input.UserService;
 import com.cesar31.root.domain.User;
-import com.cesar31.root.domain.repository.UserRepository;
+import com.cesar31.root.application.ports.output.UserRepository;
 
 import java.util.Optional;
 

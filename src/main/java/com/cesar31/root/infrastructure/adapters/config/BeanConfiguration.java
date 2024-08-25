@@ -1,9 +1,9 @@
-package com.cesar31.root.infrastructure.configuration;
+package com.cesar31.root.infrastructure.adapters.config;
 
 import com.cesar31.root.SaRootApplication;
-import com.cesar31.root.domain.repository.UserRepository;
+import com.cesar31.root.application.ports.output.UserRepository;
 import com.cesar31.root.domain.service.DomainUserService;
-import com.cesar31.root.domain.service.UserService;
+import com.cesar31.root.application.ports.input.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

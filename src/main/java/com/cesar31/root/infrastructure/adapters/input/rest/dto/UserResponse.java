@@ -1,4 +1,4 @@
-package com.cesar31.root.application.rest.dto;
+package com.cesar31.root.infrastructure.adapters.input.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
