@@ -1,4 +1,4 @@
-package com.cesar31.root.infrastructure.adapters.config.security;
+package com.cesar31.root.infrastructure.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

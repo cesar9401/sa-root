@@ -1,4 +1,4 @@
-package com.cesar31.root.infrastructure.adapters.output.persistence;
+package com.cesar31.root.infrastructure.adapters.output.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

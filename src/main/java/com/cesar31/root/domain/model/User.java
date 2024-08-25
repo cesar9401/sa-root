@@ -1,4 +1,4 @@
-package com.cesar31.root.domain;
+package com.cesar31.root.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

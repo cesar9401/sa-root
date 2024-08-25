@@ -1,23 +1,25 @@
 package com.cesar31.root.infrastructure.adapters.output.persistence;
 
-import com.cesar31.root.domain.User;
-import com.cesar31.root.application.ports.output.UserRepository;
+import com.cesar31.root.domain.model.User;
+import com.cesar31.root.application.ports.output.UserOutputPort;
+import com.cesar31.root.infrastructure.adapters.output.persistence.entity.AdmUser;
+import com.cesar31.root.infrastructure.adapters.output.persistence.repository.AdmUserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class AdmUserRepository implements UserRepository {
+public class AdmUserPersistenceAdapter implements UserOutputPort {
 
-    private final JpaAdmUserRepository jpaAdmUserRepository;
+    private final AdmUserRepository admUserRepository;
 
-    public AdmUserRepository(JpaAdmUserRepository jpaAdmUserRepository) {
-        this.jpaAdmUserRepository = jpaAdmUserRepository;
+    public AdmUserPersistenceAdapter(AdmUserRepository admUserRepository) {
+        this.admUserRepository = admUserRepository;
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return jpaAdmUserRepository.findByEmail(email)
+        return admUserRepository.findByEmail(email)
                 // TODO: use mapper here
                 .map(admUser -> new User(admUser.getEmail(), admUser.getPassword(), admUser.getEntryDate()));
     }
@@ -29,6 +31,6 @@ public class AdmUserRepository implements UserRepository {
         admUser.setEmail(user.getEmail());
         admUser.setPassword(user.getPassword());
         admUser.setEntryDate(user.getEntryDate());
-        jpaAdmUserRepository.save(admUser);
+        admUserRepository.save(admUser);
     }
 }
