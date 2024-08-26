@@ -11,6 +11,7 @@ public interface UserRestMapper {
 
     @Mapping(source = "email", target = "email")
     @Mapping(source = "password", target = "password")
+    @Mapping(source = "id", target = "userId")
     User toUser(UserRequest userRequest);
 
     @Mapping(source = "userId", target = "id")

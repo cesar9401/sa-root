@@ -46,6 +46,9 @@ public class UserService implements UserUseCase {
 
         var userByEmail = userOutputPort.findByEmailAndNotUserId(user.getEmail(), userId);
         if (userByEmail.isPresent()) throw new RuntimeException("email_already_exists");
+
+        user.setPassword(originalUser.getPassword());
+        user.setEntryDate(originalUser.getEntryDate());
         return userOutputPort.update(user);
     }
 }
