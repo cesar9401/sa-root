@@ -4,6 +4,7 @@ import com.cesar31.root.application.ports.input.UserUseCase;
 import com.cesar31.root.domain.model.User;
 import com.cesar31.root.application.ports.output.UserOutputPort;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,9 +30,9 @@ public class UserService implements UserUseCase {
     public User createUser(User user) {
         var userByEmail = userOutputPort.findByEmail(user.getEmail());
         if (userByEmail.isPresent()) throw new RuntimeException("email_already_exists");
-        // TODO: another validations here
 
         user.setUserId(UUID.randomUUID());
+        user.setEntryDate(LocalDateTime.now());
         return userOutputPort.save(user);
     }
 }

@@ -2,7 +2,7 @@ package com.cesar31.root.infrastructure.adapters.output.persistence;
 
 import com.cesar31.root.domain.model.User;
 import com.cesar31.root.application.ports.output.UserOutputPort;
-import com.cesar31.root.infrastructure.adapters.output.persistence.entity.AdmUser;
+import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.UserPersistenceMapper;
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.AdmUserRepository;
 import org.springframework.stereotype.Component;
 
@@ -13,41 +13,31 @@ import java.util.UUID;
 public class AdmUserPersistenceAdapter implements UserOutputPort {
 
     private final AdmUserRepository admUserRepository;
+    private final UserPersistenceMapper mapper;
 
-    public AdmUserPersistenceAdapter(AdmUserRepository admUserRepository) {
+    public AdmUserPersistenceAdapter(AdmUserRepository admUserRepository, UserPersistenceMapper mapper) {
         this.admUserRepository = admUserRepository;
+        this.mapper = mapper;
     }
 
     @Override
     public Optional<User> findByUserId(UUID userId) {
-        return admUserRepository.findById(userId)
-                // TODO: use mapper here
-                .map(admUser -> new User(admUser.getUserId(), admUser.getEmail(), admUser.getPassword(), admUser.getEntryDate()));
+        return admUserRepository
+                .findById(userId)
+                .map(mapper::toUser);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return admUserRepository.findByEmail(email)
-                // TODO: use mapper here
-                .map(admUser -> new User(admUser.getUserId(), admUser.getEmail(), admUser.getPassword(), admUser.getEntryDate()));
+        return admUserRepository
+                .findByEmail(email)
+                .map(mapper::toUser);
     }
 
     @Override
     public User save(User user) {
-        var admUser = new AdmUser();
-        // TODO: use mapper here
-        admUser.setUserId(user.getUserId());
-        admUser.setEmail(user.getEmail());
-        admUser.setPassword(user.getPassword());
-        admUser.setEntryDate(user.getEntryDate());
+        var admUser = mapper.toAdmUser(user);
         var createdUser = admUserRepository.save(admUser);
-
-        // TODO: user mapper here
-        return new User(
-                createdUser.getUserId(),
-                createdUser.getEmail(),
-                createdUser.getPassword(),
-                createdUser.getEntryDate()
-        );
+        return mapper.toUser(createdUser);
     }
 }

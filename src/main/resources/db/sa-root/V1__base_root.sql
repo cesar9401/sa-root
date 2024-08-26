@@ -33,7 +33,7 @@ CREATE TABLE adm_user
     user_id    UUID         NOT NULL,
     email      VARCHAR(150) NOT NULL,
     password   VARCHAR(500) NOT NULL,
-    entry_date TIMESTAMP WITHOUT TIME ZONE,
+    entry_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT adm_user_pk PRIMARY KEY (user_id)
 );
 
