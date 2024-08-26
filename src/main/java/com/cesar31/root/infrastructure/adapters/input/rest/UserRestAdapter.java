@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,5 +48,12 @@ public class UserRestAdapter {
         var user = mapper.toUser(userRequest);
         var newUser = userUseCase.createUser(user);
         return new ResponseEntity<>(mapper.toUserResponse(newUser), HttpStatus.CREATED);
+    }
+
+    @PutMapping("{userId}")
+    public ResponseEntity<UserResponse> update(@PathVariable("userId") UUID userId, @RequestBody UserRequest userRequest) {
+        var user = mapper.toUser(userRequest);
+        var updatedUser = userUseCase.updateUser(userId, user);
+        return new ResponseEntity<>(mapper.toUserResponse(updatedUser), HttpStatus.OK);
     }
 }

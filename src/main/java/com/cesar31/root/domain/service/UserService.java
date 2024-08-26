@@ -35,4 +35,17 @@ public class UserService implements UserUseCase {
         user.setEntryDate(LocalDateTime.now());
         return userOutputPort.save(user);
     }
+
+    @Override
+    public User updateUser(UUID userId, User user) {
+        var userById = userOutputPort.findByUserId(userId);
+        if (userById.isEmpty()) throw new RuntimeException("user_not_found");
+
+        var originalUser = userById.get();
+        if (!originalUser.getUserId().equals(user.getUserId())) throw new RuntimeException("invalid_update");
+
+        var userByEmail = userOutputPort.findByEmailAndNotUserId(user.getEmail(), userId);
+        if (userByEmail.isPresent()) throw new RuntimeException("email_already_exists");
+        return userOutputPort.update(user);
+    }
 }

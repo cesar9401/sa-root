@@ -35,9 +35,23 @@ public class AdmUserPersistenceAdapter implements UserOutputPort {
     }
 
     @Override
+    public Optional<User> findByEmailAndNotUserId(String email, UUID userId) {
+        return admUserRepository
+                .findByEmailAndUserIdNot(email, userId)
+                .map(mapper::toUser);
+    }
+
+    @Override
     public User save(User user) {
         var admUser = mapper.toAdmUser(user);
         var createdUser = admUserRepository.save(admUser);
         return mapper.toUser(createdUser);
+    }
+
+    @Override
+    public User update(User user) {
+        var admUser = mapper.toAdmUser(user);
+        var updatedUser = admUserRepository.save(admUser);
+        return mapper.toUser(updatedUser);
     }
 }

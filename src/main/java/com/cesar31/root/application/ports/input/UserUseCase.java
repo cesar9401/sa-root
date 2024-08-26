@@ -12,4 +12,6 @@ public interface UserUseCase {
     Optional<User> findByEmail(String email);
 
     User createUser(User user);
+
+    User updateUser(UUID userId, User user);
 }

@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface AdmUserRepository extends JpaRepository<AdmUser, UUID> {
 
     Optional<AdmUser> findByEmail(String email);
+
+    Optional<AdmUser> findByEmailAndUserIdNot(String email, UUID userId);
 }

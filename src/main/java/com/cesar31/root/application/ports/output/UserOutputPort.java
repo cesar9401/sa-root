@@ -11,5 +11,9 @@ public interface UserOutputPort {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByEmailAndNotUserId(String email, UUID userId);
+
     User save(User user);
+
+    User update(User user);
 }
