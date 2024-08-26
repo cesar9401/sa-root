@@ -4,8 +4,9 @@ import com.cesar31.root.infrastructure.adapters.output.persistence.entity.AdmUse
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
-public interface AdmUserRepository extends JpaRepository<AdmUser, Long> {
+public interface AdmUserRepository extends JpaRepository<AdmUser, UUID> {
 
     Optional<AdmUser> findByEmail(String email);
 }

@@ -1,7 +1,7 @@
 CREATE TABLE adm_permission
 (
-    permission_id        BIGINT       NOT NULL,
-    parent_permission_id BIGINT,
+    permission_id        UUID         NOT NULL,
+    parent_permission_id UUID,
     name                 VARCHAR(100) NOT NULL,
     href                 VARCHAR(250) NOT NULL,
     CONSTRAINT adm_permission_pk PRIMARY KEY (permission_id)
@@ -9,7 +9,7 @@ CREATE TABLE adm_permission
 
 CREATE TABLE adm_role
 (
-    role_id     BIGINT      NOT NULL,
+    role_id     UUID        NOT NULL,
     name        VARCHAR(75) NOT NULL,
     description VARCHAR(200),
     CONSTRAINT adm_role_pk PRIMARY KEY (role_id)
@@ -17,9 +17,9 @@ CREATE TABLE adm_role
 
 CREATE TABLE adm_role_permission
 (
-    role_permission_id BIGINT  NOT NULL,
-    role_id            BIGINT  NOT NULL,
-    permission_id      BIGINT  NOT NULL,
+    role_permission_id UUID    NOT NULL,
+    role_id            UUID    NOT NULL,
+    permission_id      UUID    NOT NULL,
     read_permission    BOOLEAN NOT NULL,
     create_permission  BOOLEAN NOT NULL,
     update_permission  BOOLEAN NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE adm_role_permission
 
 CREATE TABLE adm_user
 (
-    user_id    BIGINT       NOT NULL,
+    user_id    UUID         NOT NULL,
     email      VARCHAR(150) NOT NULL,
     password   VARCHAR(500) NOT NULL,
     entry_date TIMESTAMP WITHOUT TIME ZONE,
@@ -39,11 +39,15 @@ CREATE TABLE adm_user
 
 CREATE TABLE adm_user_role
 (
-    user_role_id BIGINT NOT NULL,
-    role_id      BIGINT NOT NULL,
-    user_id      BIGINT NOT NULL,
+    user_role_id UUID NOT NULL,
+    role_id      UUID NOT NULL,
+    user_id      UUID NOT NULL,
     CONSTRAINT adm_user_role_pk PRIMARY KEY (user_role_id)
 );
+
+ALTER TABLE public.adm_user
+    ADD CONSTRAINT adm_user_email_uq
+        UNIQUE (email);
 
 ALTER TABLE public.adm_permission
     ADD CONSTRAINT adm_permission_adm_permission_fk
@@ -83,9 +87,3 @@ ALTER TABLE adm_user_role
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
             NOT DEFERRABLE;
-
--- sequences
-CREATE SEQUENCE SEQ_ADM_USER INCREMENT BY 1 START WITH 15000;
-CREATE SEQUENCE SEQ_ADM_USER_ROLE INCREMENT BY 1 START WITH 15000;
-CREATE SEQUENCE SEQ_ADM_ROLE INCREMENT BY 1 START WITH 15000;
-CREATE SEQUENCE SEQ_ADM_ROLE_PERMISSION INCREMENT BY 1 START WITH 15000;

@@ -7,6 +7,7 @@ import com.cesar31.root.infrastructure.adapters.output.persistence.repository.Ad
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class AdmUserPersistenceAdapter implements UserOutputPort {
@@ -18,19 +19,35 @@ public class AdmUserPersistenceAdapter implements UserOutputPort {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return admUserRepository.findByEmail(email)
+    public Optional<User> findByUserId(UUID userId) {
+        return admUserRepository.findById(userId)
                 // TODO: use mapper here
-                .map(admUser -> new User(admUser.getEmail(), admUser.getPassword(), admUser.getEntryDate()));
+                .map(admUser -> new User(admUser.getUserId(), admUser.getEmail(), admUser.getPassword(), admUser.getEntryDate()));
     }
 
     @Override
-    public void save(User user) {
+    public Optional<User> findByEmail(String email) {
+        return admUserRepository.findByEmail(email)
+                // TODO: use mapper here
+                .map(admUser -> new User(admUser.getUserId(), admUser.getEmail(), admUser.getPassword(), admUser.getEntryDate()));
+    }
+
+    @Override
+    public User save(User user) {
         var admUser = new AdmUser();
         // TODO: use mapper here
+        admUser.setUserId(user.getUserId());
         admUser.setEmail(user.getEmail());
         admUser.setPassword(user.getPassword());
         admUser.setEntryDate(user.getEntryDate());
-        admUserRepository.save(admUser);
+        var createdUser = admUserRepository.save(admUser);
+
+        // TODO: user mapper here
+        return new User(
+                createdUser.getUserId(),
+                createdUser.getEmail(),
+                createdUser.getPassword(),
+                createdUser.getEntryDate()
+        );
     }
 }

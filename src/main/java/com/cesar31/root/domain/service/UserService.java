@@ -5,6 +5,7 @@ import com.cesar31.root.domain.model.User;
 import com.cesar31.root.application.ports.output.UserOutputPort;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class UserService implements UserUseCase {
 
@@ -15,16 +16,22 @@ public class UserService implements UserUseCase {
     }
 
     @Override
+    public Optional<User> findByUserId(UUID userId) {
+        return userOutputPort.findByUserId(userId);
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         return userOutputPort.findByEmail(email);
     }
 
     @Override
-    public void createUser(User user) {
+    public User createUser(User user) {
         var userByEmail = userOutputPort.findByEmail(user.getEmail());
         if (userByEmail.isPresent()) throw new RuntimeException("email_already_exists");
         // TODO: another validations here
 
-        userOutputPort.save(user);
+        user.setUserId(UUID.randomUUID());
+        return userOutputPort.save(user);
     }
 }
