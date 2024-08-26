@@ -2,8 +2,8 @@ package com.cesar31.root.infrastructure.adapters.input.rest;
 
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserRequest;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserResponse;
-import com.cesar31.root.domain.model.User;
 import com.cesar31.root.application.ports.input.UserUseCase;
+import com.cesar31.root.infrastructure.adapters.input.rest.mapper.UserRestMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,51 +21,31 @@ import java.util.UUID;
 public class UserRestAdapter {
 
     private final UserUseCase userUseCase;
+    private final UserRestMapper mapper;
 
-    public UserRestAdapter(UserUseCase userUseCase) {
+    public UserRestAdapter(UserUseCase userUseCase, UserRestMapper mapper) {
         this.userUseCase = userUseCase;
+        this.mapper = mapper;
     }
 
     @GetMapping("{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable("id") UUID id) {
         return userUseCase.findByUserId(id)
-                .map(u -> {
-                    // TODO: user mapper here
-                    var userResponse = new UserResponse();
-                    userResponse.setId(u.getUserId());
-                    userResponse.setEmail(u.getEmail());
-                    userResponse.setEntryDate(u.getEntryDate());
-                    return new ResponseEntity<>(userResponse, HttpStatus.OK);
-                })
+                .map(u -> ResponseEntity.ok(mapper.toUserResponse(u)))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("by-email")
     public ResponseEntity<UserResponse> findByEmail(@RequestParam(name = "email") String email) {
         return userUseCase.findByEmail(email)
-                .map(u -> {
-                    // TODO: user mapper here
-                    var userResponse = new UserResponse();
-                    userResponse.setId(u.getUserId());
-                    userResponse.setEmail(u.getEmail());
-                    userResponse.setEntryDate(u.getEntryDate());
-                    return new ResponseEntity<>(userResponse, HttpStatus.OK);
-                })
+                .map(u -> ResponseEntity.ok(mapper.toUserResponse(u)))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
-        // TODO: user mapper here
-        var user = new User(userRequest.getEmail(), userRequest.getPassword());
+        var user = mapper.toUser(userRequest);
         var newUser = userUseCase.createUser(user);
-
-        // TODO: use mapper here
-        var response = new UserResponse();
-        response.setId(newUser.getUserId());
-        response.setEmail(newUser.getEmail());
-        response.setEntryDate(newUser.getEntryDate());
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(mapper.toUserResponse(newUser), HttpStatus.CREATED);
     }
 }

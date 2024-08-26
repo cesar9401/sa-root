@@ -20,10 +20,4 @@ public class User {
     private User() {
         this.entryDate = LocalDateTime.now();
     }
-
-    public User(String email, String password) {
-        this();
-        this.email = email;
-        this.password = password;
-    }
 }
