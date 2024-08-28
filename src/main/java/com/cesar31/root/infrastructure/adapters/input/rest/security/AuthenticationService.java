@@ -4,6 +4,7 @@ import com.cesar31.root.infrastructure.adapters.input.rest.dto.AuthReqDto;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.JwtResDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,6 @@ public class AuthenticationService {
             log.error("Error:", e);
         }
 
-        throw new RuntimeException("invalid_user");
+        throw new BadCredentialsException("invalid_credentials");
     }
 }
