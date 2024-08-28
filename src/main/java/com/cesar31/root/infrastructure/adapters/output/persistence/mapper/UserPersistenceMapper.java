@@ -1,13 +1,13 @@
 package com.cesar31.root.infrastructure.adapters.output.persistence.mapper;
 
 import com.cesar31.root.domain.model.User;
-import com.cesar31.root.infrastructure.adapters.output.persistence.entity.AdmUser;
+import com.cesar31.root.infrastructure.adapters.output.persistence.entity.UserEntity;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface UserPersistenceMapper {
 
-    User toUser(AdmUser admUser);
+    User toUser(UserEntity userEntity);
 
-    AdmUser toAdmUser(User user);
+    UserEntity toUserEntity(User user);
 }
