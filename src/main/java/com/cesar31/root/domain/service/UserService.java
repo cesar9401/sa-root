@@ -1,6 +1,7 @@
 package com.cesar31.root.domain.service;
 
 import com.cesar31.root.application.ports.input.UserUseCase;
+import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.domain.model.User;
 import com.cesar31.root.application.ports.output.UserOutputPort;
 
@@ -11,9 +12,11 @@ import java.util.UUID;
 public class UserService implements UserUseCase {
 
     private final UserOutputPort userOutputPort;
+    private final PasswordEncoderPort passwordEncoderPort;
 
-    public UserService(UserOutputPort userOutputPort) {
+    public UserService(UserOutputPort userOutputPort, PasswordEncoderPort passwordEncoderPort) {
         this.userOutputPort = userOutputPort;
+        this.passwordEncoderPort = passwordEncoderPort;
     }
 
     @Override
@@ -31,6 +34,7 @@ public class UserService implements UserUseCase {
         var userByEmail = userOutputPort.findByEmail(user.getEmail());
         if (userByEmail.isPresent()) throw new RuntimeException("email_already_exists");
 
+        user.setPassword(passwordEncoderPort.encode(user.getPassword()));
         user.setUserId(UUID.randomUUID());
         user.setEntryDate(LocalDateTime.now());
         return userOutputPort.save(user);

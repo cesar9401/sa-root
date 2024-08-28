@@ -4,7 +4,6 @@ import com.cesar31.root.domain.model.User;
 import com.cesar31.root.application.ports.output.UserOutputPort;
 import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.UserPersistenceMapper;
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.AdmUserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -15,15 +14,12 @@ public class AdmUserPersistenceAdapter implements UserOutputPort {
 
     private final AdmUserRepository admUserRepository;
     private final UserPersistenceMapper mapper;
-    private final PasswordEncoder passwordEncoder;
 
     public AdmUserPersistenceAdapter(
             AdmUserRepository admUserRepository,
-            PasswordEncoder passwordEncoder,
             UserPersistenceMapper mapper
     ) {
         this.admUserRepository = admUserRepository;
-        this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
     }
 
@@ -50,8 +46,6 @@ public class AdmUserPersistenceAdapter implements UserOutputPort {
 
     @Override
     public User save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         var admUser = mapper.toAdmUser(user);
         var createdUser = admUserRepository.save(admUser);
         return mapper.toUser(createdUser);
