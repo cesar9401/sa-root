@@ -2,6 +2,8 @@ package com.cesar31.root.domain.service;
 
 import com.cesar31.root.application.ports.input.UserUseCase;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
+import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
+import com.cesar31.root.domain.exception.DomainException;
 import com.cesar31.root.domain.model.User;
 import com.cesar31.root.application.ports.output.UserOutputPort;
 
@@ -30,9 +32,9 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public User createUser(User user) {
+    public User createUser(User user) throws DomainException {
         var userByEmail = userOutputPort.findByEmail(user.getEmail());
-        if (userByEmail.isPresent()) throw new RuntimeException("email_already_exists");
+        if (userByEmail.isPresent()) throw new DomainException("email_already_exists");
 
         user.setPassword(passwordEncoderPort.encode(user.getPassword()));
         user.setUserId(UUID.randomUUID());
@@ -41,15 +43,15 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public User updateUser(UUID userId, User user) {
+    public User updateUser(UUID userId, User user) throws DomainEntityNotFoundException, DomainException {
         var userById = userOutputPort.findByUserId(userId);
-        if (userById.isEmpty()) throw new RuntimeException("user_not_found");
+        if (userById.isEmpty()) throw new DomainEntityNotFoundException("user_not_found");
 
         var originalUser = userById.get();
-        if (!originalUser.getUserId().equals(user.getUserId())) throw new RuntimeException("invalid_update");
+        if (!originalUser.getUserId().equals(user.getUserId())) throw new DomainException("invalid_update");
 
         var userByEmail = userOutputPort.findByEmailAndNotUserId(user.getEmail(), userId);
-        if (userByEmail.isPresent()) throw new RuntimeException("email_already_exists");
+        if (userByEmail.isPresent()) throw new DomainException("email_already_exists");
 
         user.setPassword(originalUser.getPassword());
         user.setEntryDate(originalUser.getEntryDate());

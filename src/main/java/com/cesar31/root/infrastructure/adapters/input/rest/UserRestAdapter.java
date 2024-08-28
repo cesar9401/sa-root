@@ -1,5 +1,7 @@
 package com.cesar31.root.infrastructure.adapters.input.rest;
 
+import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
+import com.cesar31.root.domain.exception.DomainException;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserRequest;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserResponse;
 import com.cesar31.root.application.ports.input.UserUseCase;
@@ -44,14 +46,14 @@ public class UserRestAdapter {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) throws DomainException {
         var user = mapper.toUser(userRequest);
         var newUser = userUseCase.createUser(user);
         return new ResponseEntity<>(mapper.toUserResponse(newUser), HttpStatus.CREATED);
     }
 
     @PutMapping("{userId}")
-    public ResponseEntity<UserResponse> update(@PathVariable("userId") UUID userId, @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> update(@PathVariable("userId") UUID userId, @RequestBody UserRequest userRequest) throws DomainEntityNotFoundException, DomainException {
         var user = mapper.toUser(userRequest);
         var updatedUser = userUseCase.updateUser(userId, user);
         return new ResponseEntity<>(mapper.toUserResponse(updatedUser), HttpStatus.OK);
