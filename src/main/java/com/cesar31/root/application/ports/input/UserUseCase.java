@@ -4,10 +4,13 @@ import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
 import com.cesar31.root.domain.exception.DomainException;
 import com.cesar31.root.domain.model.User;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UserUseCase {
+
+    List<User> findAll();
 
     Optional<User> findByUserId(UUID userId);
 

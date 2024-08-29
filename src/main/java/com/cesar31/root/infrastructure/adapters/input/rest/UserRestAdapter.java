@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +30,16 @@ public class UserRestAdapter {
     public UserRestAdapter(UserUseCase userUseCase, UserRestMapper mapper) {
         this.userUseCase = userUseCase;
         this.mapper = mapper;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> findAll() {
+        var users = userUseCase.findAll()
+                .stream()
+                .map(mapper::toUserResponse)
+                .toList();
+
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("{id}")

@@ -6,6 +6,7 @@ import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.UserPe
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.UserEntityRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +22,14 @@ public class UserPersistenceAdapter implements UserOutputPort {
     ) {
         this.userEntityRepository = userEntityRepository;
         this.mapper = mapper;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userEntityRepository.findAll()
+                .stream()
+                .map(mapper::toUser)
+                .toList();
     }
 
     @Override

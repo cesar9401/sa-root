@@ -8,6 +8,7 @@ import com.cesar31.root.domain.model.User;
 import com.cesar31.root.application.ports.output.UserOutputPort;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,6 +20,11 @@ public class UserService implements UserUseCase {
     public UserService(UserOutputPort userOutputPort, PasswordEncoderPort passwordEncoderPort) {
         this.userOutputPort = userOutputPort;
         this.passwordEncoderPort = passwordEncoderPort;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userOutputPort.findAll();
     }
 
     @Override
