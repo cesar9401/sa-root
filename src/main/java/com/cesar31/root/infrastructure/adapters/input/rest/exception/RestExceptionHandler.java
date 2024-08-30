@@ -2,6 +2,7 @@ package com.cesar31.root.infrastructure.adapters.input.rest.exception;
 
 import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
 import com.cesar31.root.domain.exception.DomainException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,5 +26,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorFieldResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        var errors = ex.getConstraintViolations()
+                .stream()
+                .map(error -> new ErrorField(error.getPropertyPath().toString(), error.getMessage(), error.getInvalidValue()))
+                .toList();
+
+        var response = new ErrorFieldResponse("invalid_request", errors);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

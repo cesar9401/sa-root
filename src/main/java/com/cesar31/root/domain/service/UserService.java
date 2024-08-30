@@ -43,9 +43,10 @@ public class UserService implements UserUseCase {
 
     @Override
     public User createUser(UserReqDto reqDto) throws DomainException {
+        reqDto.validateSelf();
+
         var userByEmail = userOutputPort.findByEmail(reqDto.getEmail());
         if (userByEmail.isPresent()) throw new DomainException("email_already_exists");
-
         var user = mapper.toUser(reqDto);
         user.setPassword(passwordEncoderPort.encode(reqDto.getPassword()));
         user.setUserId(UUID.randomUUID());

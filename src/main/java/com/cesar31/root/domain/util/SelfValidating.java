@@ -1,0 +1,23 @@
+package com.cesar31.root.domain.util;
+
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+
+public abstract class SelfValidating<T> {
+
+    private final Validator validator;
+
+    public SelfValidating() {
+        try (var factory = Validation.buildDefaultValidatorFactory()) {
+            this.validator = factory.getValidator();
+        }
+    }
+
+    public void validateSelf() {
+        var violations = validator.validate(this);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
+}
