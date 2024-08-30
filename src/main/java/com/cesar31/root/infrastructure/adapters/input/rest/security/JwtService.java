@@ -27,22 +27,22 @@ public class JwtService {
     private String ISSUER;
 
     public JwtResDto generateToken(UserDetails userDetails) {
-        var token = Jwts
-                .builder()
-                .claims(Map.of("authorities", userDetails.getAuthorities()))
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + TTL_MILLIS))
-                .issuer(ISSUER)
-                .signWith(getSecretKey())
-                .compact();
-
         var ms = new Date()
                 .toInstant()
                 .plus(TTL_MILLIS, ChronoUnit.MILLIS)
                 .toEpochMilli();
 
-        return new JwtResDto(token, ms);
+        var token = Jwts
+                .builder()
+                .claims(Map.of("authorities", userDetails.getAuthorities()))
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date())
+                .expiration(new Date(ms))
+                .issuer(ISSUER)
+                .signWith(getSecretKey())
+                .compact();
+
+        return new JwtResDto(token, ms / 1000);
     }
 
     public String getUsername(String token) {
