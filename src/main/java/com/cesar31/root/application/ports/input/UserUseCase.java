@@ -1,5 +1,6 @@
 package com.cesar31.root.application.ports.input;
 
+import com.cesar31.root.domain.dto.UserReqDto;
 import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
 import com.cesar31.root.domain.exception.DomainException;
 import com.cesar31.root.domain.model.User;
@@ -16,7 +17,8 @@ public interface UserUseCase {
 
     Optional<User> findByEmail(String email);
 
-    User createUser(User user) throws DomainException;
+    User createUser(UserReqDto reqDto) throws DomainException;
 
-    User updateUser(UUID userId, User user) throws DomainEntityNotFoundException, DomainException;
+    User updateUser(UUID userId, UserReqDto reqDto) throws DomainEntityNotFoundException, DomainException;
 }
+

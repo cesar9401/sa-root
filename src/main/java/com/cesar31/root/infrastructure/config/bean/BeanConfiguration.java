@@ -5,6 +5,7 @@ import com.cesar31.root.application.ports.input.UserByEmailUseCase;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.ports.output.UserByEmailPort;
 import com.cesar31.root.application.ports.output.UserOutputPort;
+import com.cesar31.root.domain.mapper.UserMapper;
 import com.cesar31.root.domain.service.UserByEmailService;
 import com.cesar31.root.domain.service.UserService;
 import com.cesar31.root.application.ports.input.UserUseCase;
@@ -17,8 +18,8 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    UserUseCase userService(final UserOutputPort userOutputPort, final PasswordEncoderPort passwordEncoderPort) {
-        return new UserService(userOutputPort, passwordEncoderPort);
+    UserUseCase userService(final UserOutputPort userOutputPort, final PasswordEncoderPort passwordEncoderPort, final UserMapper mapper) {
+        return new UserService(userOutputPort, passwordEncoderPort, mapper);
     }
 
     @Bean
