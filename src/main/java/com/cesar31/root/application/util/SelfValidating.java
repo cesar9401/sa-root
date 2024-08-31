@@ -1,4 +1,4 @@
-package com.cesar31.root.domain.util;
+package com.cesar31.root.application.util;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;

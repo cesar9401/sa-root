@@ -1,9 +1,9 @@
 package com.cesar31.root.infrastructure.adapters.input.rest;
 
-import com.cesar31.root.domain.dto.CreateUserReqDto;
-import com.cesar31.root.domain.dto.UpdateUserReqDto;
-import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
-import com.cesar31.root.domain.exception.DomainException;
+import com.cesar31.root.application.dto.CreateUserReqDto;
+import com.cesar31.root.application.dto.UpdateUserReqDto;
+import com.cesar31.root.application.exception.EntityNotFoundException;
+import com.cesar31.root.application.exception.ApplicationException;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserResponse;
 import com.cesar31.root.application.ports.input.UserUseCase;
 import com.cesar31.root.infrastructure.adapters.input.rest.mapper.UserRestMapper;
@@ -63,14 +63,14 @@ public class UserRestAdapter {
 
     @PostMapping
     @Operation(description = "Create a new user.")
-    public ResponseEntity<UserResponse> create(@RequestBody CreateUserReqDto reqDto) throws DomainException {
+    public ResponseEntity<UserResponse> create(@RequestBody CreateUserReqDto reqDto) throws ApplicationException {
         var newUser = userUseCase.createUser(reqDto);
         return new ResponseEntity<>(mapper.toUserResponse(newUser), HttpStatus.CREATED);
     }
 
     @PutMapping("{userId}")
     @Operation(description = "Update any user by its id.")
-    public ResponseEntity<UserResponse> update(@PathVariable("userId") UUID userId, @RequestBody UpdateUserReqDto reqDto) throws DomainEntityNotFoundException, DomainException {
+    public ResponseEntity<UserResponse> update(@PathVariable("userId") UUID userId, @RequestBody UpdateUserReqDto reqDto) throws EntityNotFoundException, ApplicationException {
         var updatedUser = userUseCase.updateUser(userId, reqDto);
         return new ResponseEntity<>(mapper.toUserResponse(updatedUser), HttpStatus.OK);
     }

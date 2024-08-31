@@ -1,8 +1,8 @@
-package com.cesar31.root.domain.service;
+package com.cesar31.root.application.service;
 
 import com.cesar31.root.application.ports.input.UserByEmailUseCase;
 import com.cesar31.root.application.ports.output.UserByEmailPort;
-import com.cesar31.root.domain.model.User;
+import com.cesar31.root.domain.User;
 
 import java.util.Optional;
 

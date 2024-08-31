@@ -1,6 +1,6 @@
 package com.cesar31.root.infrastructure.adapters.input.rest.mapper;
 
-import com.cesar31.root.domain.model.User;
+import com.cesar31.root.domain.User;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

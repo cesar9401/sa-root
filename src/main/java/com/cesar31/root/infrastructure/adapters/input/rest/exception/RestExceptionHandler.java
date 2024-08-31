@@ -1,7 +1,7 @@
 package com.cesar31.root.infrastructure.adapters.input.rest.exception;
 
-import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
-import com.cesar31.root.domain.exception.DomainException;
+import com.cesar31.root.application.exception.EntityNotFoundException;
+import com.cesar31.root.application.exception.ApplicationException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +13,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(DomainEntityNotFoundException.class)
-    public ResponseEntity<String> handleDomainEntityNotFoundException(DomainEntityNotFoundException ex) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleDomainEntityNotFoundException(EntityNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(DomainException.class)
-    public ResponseEntity<String> handleDomainException(DomainException ex) {
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<String> handleDomainException(ApplicationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

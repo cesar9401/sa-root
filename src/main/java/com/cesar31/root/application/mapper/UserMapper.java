@@ -1,8 +1,8 @@
-package com.cesar31.root.domain.mapper;
+package com.cesar31.root.application.mapper;
 
-import com.cesar31.root.domain.dto.CreateUserReqDto;
-import com.cesar31.root.domain.dto.UpdateUserReqDto;
-import com.cesar31.root.domain.model.User;
+import com.cesar31.root.application.dto.CreateUserReqDto;
+import com.cesar31.root.application.dto.UpdateUserReqDto;
+import com.cesar31.root.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

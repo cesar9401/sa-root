@@ -1,6 +1,6 @@
-package com.cesar31.root.domain.dto;
+package com.cesar31.root.application.dto;
 
-import com.cesar31.root.domain.util.SelfValidating;
+import com.cesar31.root.application.util.SelfValidating;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

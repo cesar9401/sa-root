@@ -1,6 +1,6 @@
 package com.cesar31.root.application.ports.output;
 
-import com.cesar31.root.domain.model.User;
+import com.cesar31.root.domain.User;
 
 import java.util.List;
 import java.util.Optional;

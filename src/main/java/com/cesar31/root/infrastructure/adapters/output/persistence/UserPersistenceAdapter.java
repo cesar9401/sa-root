@@ -1,6 +1,6 @@
 package com.cesar31.root.infrastructure.adapters.output.persistence;
 
-import com.cesar31.root.domain.model.User;
+import com.cesar31.root.domain.User;
 import com.cesar31.root.application.ports.output.UserOutputPort;
 import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.UserPersistenceMapper;
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.UserEntityRepository;
