@@ -2,6 +2,8 @@ package com.cesar31.root.infrastructure.adapters.input.rest.security;
 
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.AuthReqDto;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.JwtResDto;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,6 +30,13 @@ public class AuthenticationService {
     }
 
     public JwtResDto createToken(AuthReqDto authReq) {
+        // validate AuthReqDto
+        try (var factory = Validation.buildDefaultValidatorFactory()) {
+            var validator = factory.getValidator();
+            var violations = validator.validate(authReq);
+            if (!violations.isEmpty()) throw new ConstraintViolationException(violations);
+        }
+
         var authData = new UsernamePasswordAuthenticationToken(authReq.getUsername(), authReq.getPassword());
 
         try {

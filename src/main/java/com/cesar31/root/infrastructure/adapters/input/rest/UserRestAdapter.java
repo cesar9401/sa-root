@@ -7,6 +7,7 @@ import com.cesar31.root.domain.exception.DomainException;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserResponse;
 import com.cesar31.root.application.ports.input.UserUseCase;
 import com.cesar31.root.infrastructure.adapters.input.rest.mapper.UserRestMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ public class UserRestAdapter {
     }
 
     @GetMapping
+    @Operation(description = "Find all users.")
     public ResponseEntity<List<UserResponse>> findAll() {
         var users = userUseCase.findAll()
                 .stream()
@@ -44,6 +46,7 @@ public class UserRestAdapter {
     }
 
     @GetMapping("{id}")
+    @Operation(description = "Get any user by id.")
     public ResponseEntity<UserResponse> getUser(@PathVariable("id") UUID id) {
         return userUseCase.findByUserId(id)
                 .map(u -> ResponseEntity.ok(mapper.toUserResponse(u)))
@@ -51,6 +54,7 @@ public class UserRestAdapter {
     }
 
     @GetMapping("by-email")
+    @Operation(description = "Find any user by its email.")
     public ResponseEntity<UserResponse> findByEmail(@RequestParam(name = "email") String email) {
         return userUseCase.findByEmail(email)
                 .map(u -> ResponseEntity.ok(mapper.toUserResponse(u)))
@@ -58,12 +62,14 @@ public class UserRestAdapter {
     }
 
     @PostMapping
+    @Operation(description = "Create a new user.")
     public ResponseEntity<UserResponse> create(@RequestBody CreateUserReqDto reqDto) throws DomainException {
         var newUser = userUseCase.createUser(reqDto);
         return new ResponseEntity<>(mapper.toUserResponse(newUser), HttpStatus.CREATED);
     }
 
     @PutMapping("{userId}")
+    @Operation(description = "Update any user by its id.")
     public ResponseEntity<UserResponse> update(@PathVariable("userId") UUID userId, @RequestBody UpdateUserReqDto reqDto) throws DomainEntityNotFoundException, DomainException {
         var updatedUser = userUseCase.updateUser(userId, reqDto);
         return new ResponseEntity<>(mapper.toUserResponse(updatedUser), HttpStatus.OK);
