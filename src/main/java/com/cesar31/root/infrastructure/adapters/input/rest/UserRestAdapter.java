@@ -1,6 +1,7 @@
 package com.cesar31.root.infrastructure.adapters.input.rest;
 
-import com.cesar31.root.domain.dto.UserReqDto;
+import com.cesar31.root.domain.dto.CreateUserReqDto;
+import com.cesar31.root.domain.dto.UpdateUserReqDto;
 import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
 import com.cesar31.root.domain.exception.DomainException;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.UserResponse;
@@ -57,13 +58,13 @@ public class UserRestAdapter {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> create(@RequestBody UserReqDto reqDto) throws DomainException {
+    public ResponseEntity<UserResponse> create(@RequestBody CreateUserReqDto reqDto) throws DomainException {
         var newUser = userUseCase.createUser(reqDto);
         return new ResponseEntity<>(mapper.toUserResponse(newUser), HttpStatus.CREATED);
     }
 
     @PutMapping("{userId}")
-    public ResponseEntity<UserResponse> update(@PathVariable("userId") UUID userId, @RequestBody UserReqDto reqDto) throws DomainEntityNotFoundException, DomainException {
+    public ResponseEntity<UserResponse> update(@PathVariable("userId") UUID userId, @RequestBody UpdateUserReqDto reqDto) throws DomainEntityNotFoundException, DomainException {
         var updatedUser = userUseCase.updateUser(userId, reqDto);
         return new ResponseEntity<>(mapper.toUserResponse(updatedUser), HttpStatus.OK);
     }

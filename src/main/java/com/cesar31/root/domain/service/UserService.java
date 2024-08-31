@@ -2,7 +2,8 @@ package com.cesar31.root.domain.service;
 
 import com.cesar31.root.application.ports.input.UserUseCase;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
-import com.cesar31.root.domain.dto.UserReqDto;
+import com.cesar31.root.domain.dto.CreateUserReqDto;
+import com.cesar31.root.domain.dto.UpdateUserReqDto;
 import com.cesar31.root.domain.exception.DomainEntityNotFoundException;
 import com.cesar31.root.domain.exception.DomainException;
 import com.cesar31.root.domain.mapper.UserMapper;
@@ -42,7 +43,8 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public User createUser(UserReqDto reqDto) throws DomainException {
+    public User createUser(CreateUserReqDto reqDto) throws DomainException {
+        // validate
         reqDto.validateSelf();
 
         var userByEmail = userOutputPort.findByEmail(reqDto.getEmail());
@@ -55,7 +57,10 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public User updateUser(UUID userId, UserReqDto reqDto) throws DomainEntityNotFoundException, DomainException {
+    public User updateUser(UUID userId, UpdateUserReqDto reqDto) throws DomainEntityNotFoundException, DomainException {
+        // validate
+        reqDto.validateSelf();
+
         var userById = userOutputPort.findByUserId(userId);
         if (userById.isEmpty()) throw new DomainEntityNotFoundException("user_not_found");
 
