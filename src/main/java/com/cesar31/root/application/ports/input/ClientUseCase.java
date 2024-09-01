@@ -13,7 +13,10 @@ import java.util.UUID;
 public interface ClientUseCase {
 
     List<Client> findAll();
+
     Optional<Client> findById(UUID clientId);
+
     Client save(CreateClientReqDto createClientReqDto) throws ApplicationException;
+
     Client update(UUID id, UpdateClientReqDto updateClientReqDto) throws ApplicationException, EntityNotFoundException;
 }
