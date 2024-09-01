@@ -12,7 +12,7 @@ public interface ClientOutputPort {
 
     Optional<Client> findById(UUID id);
 
-    Optional<Client> findDuplicatedEmail(String email, UUID userId);
+    Boolean existsByEmail(String email, UUID userId);
 
     Client save(Client client);
 }

@@ -4,6 +4,7 @@ import com.cesar31.root.application.ports.output.ClientOutputPort;
 import com.cesar31.root.domain.Client;
 import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.ClientPersistenceMapper;
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.ClientEntityRepository;
+import com.cesar31.root.infrastructure.adapters.output.persistence.repository.UserEntityRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,10 +15,12 @@ import java.util.UUID;
 public class ClientPersistenceAdapter implements ClientOutputPort {
 
     private final ClientEntityRepository clientEntityRepository;
+    private final UserEntityRepository userEntityRepository;
     private final ClientPersistenceMapper mapper;
 
-    public ClientPersistenceAdapter(ClientEntityRepository clientEntityRepository, ClientPersistenceMapper mapper) {
+    public ClientPersistenceAdapter(ClientEntityRepository clientEntityRepository, UserEntityRepository userEntityRepository, ClientPersistenceMapper mapper) {
         this.clientEntityRepository = clientEntityRepository;
+        this.userEntityRepository = userEntityRepository;
         this.mapper = mapper;
     }
 
@@ -34,9 +37,12 @@ public class ClientPersistenceAdapter implements ClientOutputPort {
     }
 
     @Override
-    public Optional<Client> findDuplicatedEmail(String email, UUID personId) {
-        return clientEntityRepository.findByUser_EmailAndClientIdNot(email, personId)
-                .map(mapper::toClient);
+    public Boolean existsByEmail(String email, UUID userId) {
+        var optional = userId == null
+                ? userEntityRepository.findByEmail(email)
+                : userEntityRepository.findByEmailAndUserIdNot(email, userId);
+
+        return optional.isPresent();
     }
 
     @Override

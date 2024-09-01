@@ -8,6 +8,7 @@ import com.cesar31.root.application.ports.output.ClientOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.domain.Client;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,8 +38,12 @@ public class ClientService implements ClientUseCase {
     @Override
     public Client save(CreateClientReqDto createClientReqDto) throws ApplicationException {
         var client = clientMapper.toClient(createClientReqDto);
-        var duplicatedEmail = clientOutputPort.findDuplicatedEmail(client.getEmail(), null);
-        if (duplicatedEmail.isPresent()) throw new ApplicationException("email_already_exists");
+
+        var existsByEmail = clientOutputPort.existsByEmail(client.getEmail(), null);
+        if (existsByEmail) throw new ApplicationException("email_already_exists");
+
+        client.setUserId(UUID.randomUUID());
+        client.setEntryDate(LocalDateTime.now());
         client.setPassword(passwordEncoderPort.encode(createClientReqDto.getPassword()));
         return clientOutputPort.save(client);
     }
