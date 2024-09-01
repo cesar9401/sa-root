@@ -1,21 +1,18 @@
-package com.cesar31.root.domain;
+package com.cesar31.root.application.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
-public class User {
+public class CreateClientReqDto {
 
-    private UUID userId;
     private String email;
     private String password;
+    private String cui;
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
-    private LocalDateTime entryDate;
 }

@@ -1,11 +1,15 @@
 package com.cesar31.root.infrastructure.config.bean;
 
 import com.cesar31.root.SaRootApplication;
+import com.cesar31.root.application.mapper.ClientMapper;
+import com.cesar31.root.application.ports.input.ClientUseCase;
 import com.cesar31.root.application.ports.input.UserByEmailUseCase;
+import com.cesar31.root.application.ports.output.ClientOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.ports.output.UserByEmailPort;
 import com.cesar31.root.application.ports.output.UserOutputPort;
 import com.cesar31.root.application.mapper.UserMapper;
+import com.cesar31.root.application.service.ClientService;
 import com.cesar31.root.application.service.UserByEmailService;
 import com.cesar31.root.application.service.UserService;
 import com.cesar31.root.application.ports.input.UserUseCase;
@@ -20,6 +24,11 @@ public class BeanConfiguration {
     @Bean
     UserUseCase userService(final UserOutputPort userOutputPort, final PasswordEncoderPort passwordEncoderPort, final UserMapper mapper) {
         return new UserService(userOutputPort, passwordEncoderPort, mapper);
+    }
+
+    @Bean
+    ClientUseCase clientService(final ClientOutputPort clientOutputPort, final PasswordEncoderPort passwordEncoderPort, final ClientMapper mapper) {
+        return new ClientService(clientOutputPort, passwordEncoderPort, mapper);
     }
 
     @Bean
