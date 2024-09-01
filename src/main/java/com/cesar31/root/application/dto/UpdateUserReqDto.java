@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UpdateUserReqDto extends SelfValidating<UpdateUserReqDto> {
+public class UpdateUserReqDto extends SelfValidating {
 
     @NotNull
     private UUID id;
@@ -21,8 +21,4 @@ public class UpdateUserReqDto extends SelfValidating<UpdateUserReqDto> {
     @NotEmpty
     @Email
     private String email;
-
-    @NotBlank
-    @NotNull
-    private String password;
 }

@@ -8,19 +8,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
-public class CreateClientReqDto extends SelfValidating {
+public class UpdateClientReqDto extends SelfValidating {
+
+    @NotNull
+    private UUID clientId;
 
     @NotBlank
     @NotNull
     @Email
     private String email;
-
-    @NotBlank
-    @NotNull
-    private String password;
 
     @NotBlank
     @NotNull

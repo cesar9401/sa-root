@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateUserReqDto extends SelfValidating<CreateUserReqDto> {
+public class CreateUserReqDto extends SelfValidating {
 
     @NotNull
     @NotEmpty

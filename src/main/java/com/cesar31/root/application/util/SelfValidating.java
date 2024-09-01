@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
-public abstract class SelfValidating<T> {
+public abstract class SelfValidating {
 
     private final Validator validator;
 
