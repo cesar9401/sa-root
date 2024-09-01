@@ -1,8 +1,6 @@
 package com.cesar31.root.infrastructure.adapters.output.persistence.mapper;
 
-import com.cesar31.root.domain.Client;
 import com.cesar31.root.domain.Employee;
-import com.cesar31.root.infrastructure.adapters.output.persistence.entity.ClientEntity;
 import com.cesar31.root.infrastructure.adapters.output.persistence.entity.EmployeeEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -26,6 +24,6 @@ public interface EmployeePersistenceMapper {
     List<EmployeeEntity> toEmployeeEntityList(List<Employee> employees);
 
     @InheritInverseConfiguration
-    Client toClient(ClientEntity clientEntity);
-    List<Client> toClients(List<ClientEntity> clientEntities);
+    Employee toEmployee(EmployeeEntity employeeEntity);
+    List<Employee> toEmployees(List<EmployeeEntity> employeeEntities);
 }

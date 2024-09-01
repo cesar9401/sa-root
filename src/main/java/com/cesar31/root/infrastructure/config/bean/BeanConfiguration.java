@@ -7,12 +7,12 @@ import com.cesar31.root.application.ports.input.UserByEmailUseCase;
 import com.cesar31.root.application.ports.output.ClientOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.ports.output.UserByEmailPort;
-import com.cesar31.root.application.ports.output.UserOutputPort;
-import com.cesar31.root.application.mapper.UserMapper;
+import com.cesar31.root.application.ports.output.EmployeeOutputPort;
+import com.cesar31.root.application.mapper.EmployeeMapper;
 import com.cesar31.root.application.service.ClientService;
 import com.cesar31.root.application.service.UserByEmailService;
-import com.cesar31.root.application.service.UserService;
-import com.cesar31.root.application.ports.input.UserUseCase;
+import com.cesar31.root.application.service.EmployeeService;
+import com.cesar31.root.application.ports.input.EmployeeUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +22,8 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    UserUseCase userService(final UserOutputPort userOutputPort, final PasswordEncoderPort passwordEncoderPort, final UserMapper mapper) {
-        return new UserService(userOutputPort, passwordEncoderPort, mapper);
+    EmployeeUseCase userService(final EmployeeOutputPort Employee, final PasswordEncoderPort passwordEncoderPort, final EmployeeMapper mapper) {
+        return new EmployeeService(Employee, passwordEncoderPort, mapper);
     }
 
     @Bean
