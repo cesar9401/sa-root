@@ -18,7 +18,6 @@ public interface ClientMapper {
 
     @Mapping(source = "clientId", target = "userId")
     @Mapping(source = "email", target = "email")
-    @Mapping(source = "password", target = "password")
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "lastName", target = "lastName")
     @Mapping(source = "birthDate", target = "birthDate")

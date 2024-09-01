@@ -14,7 +14,6 @@ public interface UserMapper {
     User toUser(CreateUserReqDto reqDto);
 
     @Mapping(source = "email", target = "email")
-    @Mapping(source = "password", target = "password")
     @Mapping(source = "id", target = "userId")
     User toUser(UpdateUserReqDto reqDto);
 }
