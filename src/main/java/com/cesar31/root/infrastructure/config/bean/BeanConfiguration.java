@@ -30,8 +30,8 @@ public class BeanConfiguration {
     }
 
     @Bean
-    ClientUseCase clientService(final ClientOutputPort clientOutputPort, final PasswordEncoderPort passwordEncoderPort, final ClientMapper mapper) {
-        return new ClientService(clientOutputPort, passwordEncoderPort, mapper);
+    ClientUseCase clientService(final ClientOutputPort clientOutputPort, final RoleOutputPort roleOutputPort, final PasswordEncoderPort passwordEncoderPort, final ClientMapper mapper) {
+        return new ClientService(clientOutputPort, roleOutputPort, passwordEncoderPort, mapper);
     }
 
     @Bean

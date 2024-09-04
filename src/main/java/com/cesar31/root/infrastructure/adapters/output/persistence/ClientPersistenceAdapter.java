@@ -2,7 +2,9 @@ package com.cesar31.root.infrastructure.adapters.output.persistence;
 
 import com.cesar31.root.application.ports.output.ClientOutputPort;
 import com.cesar31.root.domain.Client;
+import com.cesar31.root.domain.UserRole;
 import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.ClientPersistenceMapper;
+import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.UserRolePersistenceMapper;
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.ClientEntityRepository;
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.UserEntityRepository;
 import org.springframework.stereotype.Component;
@@ -17,11 +19,14 @@ public class ClientPersistenceAdapter implements ClientOutputPort {
     private final ClientEntityRepository clientEntityRepository;
     private final UserEntityRepository userEntityRepository;
     private final ClientPersistenceMapper mapper;
+    private final UserRolePersistenceMapper userRoleMapper;
 
-    public ClientPersistenceAdapter(ClientEntityRepository clientEntityRepository, UserEntityRepository userEntityRepository, ClientPersistenceMapper mapper) {
+
+    public ClientPersistenceAdapter(ClientEntityRepository clientEntityRepository, UserEntityRepository userEntityRepository, ClientPersistenceMapper mapper, UserRolePersistenceMapper userRoleMapper) {
         this.clientEntityRepository = clientEntityRepository;
         this.userEntityRepository = userEntityRepository;
         this.mapper = mapper;
+        this.userRoleMapper = userRoleMapper;
     }
 
     @Override
@@ -46,8 +51,11 @@ public class ClientPersistenceAdapter implements ClientOutputPort {
     }
 
     @Override
-    public Client save(Client client) {
+    public Client save(Client client, List<UserRole> roles) {
         var clientEntity = mapper.toClientEntity(client);
+        var userRoles = userRoleMapper.toUserRoleEntities(roles);
+
+        clientEntity.getUser().setRoles(userRoles);
         var persistedClient = clientEntityRepository.save(clientEntity);
         return mapper.toClient(persistedClient);
     }

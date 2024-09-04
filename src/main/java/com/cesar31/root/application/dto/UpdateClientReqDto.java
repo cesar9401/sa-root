@@ -33,7 +33,4 @@ public class UpdateClientReqDto extends SelfValidating {
 
     @NotNull
     private LocalDate birthDate;
-
-    @NotNull
-    private Set<UUID> roles;
 }
