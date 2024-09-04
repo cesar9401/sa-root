@@ -2,7 +2,9 @@ package com.cesar31.root.infrastructure.adapters.output.persistence;
 
 import com.cesar31.root.domain.Employee;
 import com.cesar31.root.application.ports.output.EmployeeOutputPort;
+import com.cesar31.root.domain.UserRole;
 import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.EmployeePersistenceMapper;
+import com.cesar31.root.infrastructure.adapters.output.persistence.mapper.UserRolePersistenceMapper;
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.EmployeeEntityRepository;
 import com.cesar31.root.infrastructure.adapters.output.persistence.repository.UserEntityRepository;
 import org.springframework.stereotype.Component;
@@ -17,15 +19,18 @@ public class EmployeePersistenceAdapter implements EmployeeOutputPort {
     private final EmployeeEntityRepository employeeEntityRepository;
     private final UserEntityRepository userEntityRepository;
     private final EmployeePersistenceMapper employeeMapper;
+    private final UserRolePersistenceMapper userRoleMapper;
 
     public EmployeePersistenceAdapter(
             EmployeeEntityRepository employeeEntityRepository,
             UserEntityRepository userEntityRepository,
-            EmployeePersistenceMapper employeeMapper
+            EmployeePersistenceMapper employeeMapper,
+            UserRolePersistenceMapper userRoleMapper
     ) {
         this.employeeEntityRepository = employeeEntityRepository;
         this.userEntityRepository = userEntityRepository;
         this.employeeMapper = employeeMapper;
+        this.userRoleMapper = userRoleMapper;
     }
 
     @Override
@@ -53,16 +58,12 @@ public class EmployeePersistenceAdapter implements EmployeeOutputPort {
     }
 
     @Override
-    public Employee save(Employee employee) {
-        var admUser = employeeMapper.toEmployeeEntity(employee);
-        var createdUser = employeeEntityRepository.save(admUser);
-        return employeeMapper.toEmployee(createdUser);
-    }
+    public Employee save(Employee employee, List<UserRole> userRoles) {
+        var employeeEntity = employeeMapper.toEmployeeEntity(employee);
+        var roles = userRoleMapper.toUserRoleEntities(userRoles);
 
-    @Override
-    public Employee update(Employee user) {
-        var admUser = employeeMapper.toEmployeeEntity(user);
-        var updatedUser = employeeEntityRepository.save(admUser);
-        return employeeMapper.toEmployee(updatedUser);
+        employeeEntity.getUser().setRoles(roles);
+        var createdEmployee = employeeEntityRepository.save(employeeEntity);
+        return employeeMapper.toEmployee(createdEmployee);
     }
 }

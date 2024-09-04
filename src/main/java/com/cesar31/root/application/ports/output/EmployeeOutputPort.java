@@ -1,6 +1,7 @@
 package com.cesar31.root.application.ports.output;
 
 import com.cesar31.root.domain.Employee;
+import com.cesar31.root.domain.UserRole;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,5 @@ public interface EmployeeOutputPort {
 
     Boolean existsByEmail(String email, UUID userId);
 
-    Employee save(Employee user);
-
-    Employee update(Employee user);
+    Employee save(Employee user, List<UserRole> userRoles);
 }

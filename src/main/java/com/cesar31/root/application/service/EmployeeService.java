@@ -7,23 +7,28 @@ import com.cesar31.root.application.dto.UpdateEmployeeReqDto;
 import com.cesar31.root.application.exception.EntityNotFoundException;
 import com.cesar31.root.application.exception.ApplicationException;
 import com.cesar31.root.application.mapper.EmployeeMapper;
+import com.cesar31.root.application.ports.output.RoleOutputPort;
+import com.cesar31.root.application.util.enums.RoleEnum;
 import com.cesar31.root.domain.Employee;
-import com.cesar31.root.domain.User;
 import com.cesar31.root.application.ports.output.EmployeeOutputPort;
+import com.cesar31.root.domain.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class EmployeeService implements EmployeeUseCase {
 
     private final EmployeeOutputPort employeeOutputPort;
+    private final RoleOutputPort roleOutputPort;
     private final PasswordEncoderPort passwordEncoderPort;
     private final EmployeeMapper mapper;
 
-    public EmployeeService(EmployeeOutputPort employeeOutputPort, PasswordEncoderPort passwordEncoderPort, EmployeeMapper mapper) {
+    public EmployeeService(EmployeeOutputPort employeeOutputPort, RoleOutputPort roleOutputPort, PasswordEncoderPort passwordEncoderPort, EmployeeMapper mapper) {
         this.employeeOutputPort = employeeOutputPort;
+        this.roleOutputPort = roleOutputPort;
         this.passwordEncoderPort = passwordEncoderPort;
         this.mapper = mapper;
     }
@@ -49,7 +54,9 @@ public class EmployeeService implements EmployeeUseCase {
         user.setPassword(passwordEncoderPort.encode(reqDto.getPassword()));
         user.setUserId(UUID.randomUUID());
         user.setEntryDate(LocalDateTime.now());
-        return employeeOutputPort.save(user);
+
+        var employeeRoles = getDefaultRoles(user, reqDto.getRoles());
+        return employeeOutputPort.save(user, employeeRoles);
     }
 
     @Override
@@ -69,6 +76,23 @@ public class EmployeeService implements EmployeeUseCase {
         var user = mapper.toEmployee(reqDto);
         user.setPassword(originalUser.getPassword());
         user.setEntryDate(originalUser.getEntryDate());
-        return employeeOutputPort.update(user);
+
+        var employeeRoles = getDefaultRoles(user, reqDto.getRoles());
+        return employeeOutputPort.save(user, employeeRoles);
+    }
+
+    private List<UserRole> getDefaultRoles(Employee employee, Set<UUID> roles) {
+        roles.add(RoleEnum.EMPLOYEE.roleId);
+        return roleOutputPort.findAll()
+                .stream()
+                .filter(role -> roles.contains(role.getRoleId()))
+                .map(role -> {
+                    var userRole = new UserRole();
+                    userRole.setUserRoleId(UUID.randomUUID());
+                    userRole.setUser(employee);
+                    userRole.setRole(role);
+                    return userRole;
+                })
+                .toList();
     }
 }

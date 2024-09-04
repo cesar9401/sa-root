@@ -25,8 +25,8 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    EmployeeUseCase userService(final EmployeeOutputPort Employee, final PasswordEncoderPort passwordEncoderPort, final EmployeeMapper mapper) {
-        return new EmployeeService(Employee, passwordEncoderPort, mapper);
+    EmployeeUseCase userService(final EmployeeOutputPort employeeOutputPort, final RoleOutputPort roleOutputPort, final PasswordEncoderPort passwordEncoderPort, final EmployeeMapper mapper) {
+        return new EmployeeService(employeeOutputPort, roleOutputPort, passwordEncoderPort, mapper);
     }
 
     @Bean
