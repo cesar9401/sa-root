@@ -4,9 +4,11 @@ import com.cesar31.root.SaRootApplication;
 import com.cesar31.root.application.mapper.ClientMapper;
 import com.cesar31.root.application.ports.input.ClientUseCase;
 import com.cesar31.root.application.ports.input.RoleUseCase;
+import com.cesar31.root.application.ports.input.RolesByUserIdUseCase;
 import com.cesar31.root.application.ports.input.UserByEmailUseCase;
 import com.cesar31.root.application.ports.output.ClientOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
+import com.cesar31.root.application.ports.output.RoleByUserIdPort;
 import com.cesar31.root.application.ports.output.RoleOutputPort;
 import com.cesar31.root.application.ports.output.UserByEmailPort;
 import com.cesar31.root.application.ports.output.EmployeeOutputPort;
@@ -35,12 +37,17 @@ public class BeanConfiguration {
     }
 
     @Bean
-    UserByEmailUseCase userByEmailUseCase(final UserByEmailPort userByEmailPort) {
-        return new UserByEmailService(userByEmailPort);
+    RoleUseCase roleService(final RoleOutputPort roleOutputPort) {
+        return new RoleService(roleOutputPort);
     }
 
     @Bean
-    RoleUseCase roleService(final RoleOutputPort roleOutputPort) {
-        return new RoleService(roleOutputPort);
+    UserByEmailUseCase userByEmailUseCase(final UserByEmailPort userByEmailPort, final RoleByUserIdPort rolesByUserIdPort) {
+        return new UserByEmailService(userByEmailPort, rolesByUserIdPort);
+    }
+
+    @Bean
+    RolesByUserIdUseCase roles(final UserByEmailPort userByEmailPort, final RoleByUserIdPort rolesByUserIdPort) {
+        return new UserByEmailService(userByEmailPort, rolesByUserIdPort);
     }
 }
