@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -32,4 +34,7 @@ public class CreateClientReqDto extends SelfValidating {
 
     @NotNull
     private LocalDate birthDate;
+
+    @NotNull
+    private Set<UUID> roles;
 }

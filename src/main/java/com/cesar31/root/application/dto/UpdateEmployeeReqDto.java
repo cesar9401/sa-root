@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -39,4 +40,7 @@ public class UpdateEmployeeReqDto extends SelfValidating {
     @NotNull
     @Positive
     private BigDecimal salary;
+
+    @NotNull
+    private Set<UUID> roles;
 }

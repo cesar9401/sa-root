@@ -11,6 +11,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -39,4 +41,7 @@ public class CreateEmployeeReqDto extends SelfValidating {
     @NotNull
     @Positive
     private BigDecimal salary;
+
+    @NotNull
+    private Set<UUID> roles;
 }
