@@ -52,9 +52,9 @@ public class AuthenticationService {
                 var employee = employeeUseCase.findByEmail(userDetails.getUsername());
                 var org = employee.map(Employee::getOrganization)
                         .map(UUID::toString)
-                        .orElse("");
+                        .orElse(null);
 
-                return jwtService.generateToken(userDetails, org);
+                return jwtService.generateToken((SaUser) userDetails, org);
             }
         } catch (Exception e) {
             log.error("Error:", e);

@@ -4,7 +4,6 @@ import com.cesar31.root.application.ports.input.RolesByUserIdUseCase;
 import com.cesar31.root.application.ports.input.UserByEmailUseCase;
 import com.cesar31.root.domain.Role;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,6 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
-        return new User(user.getEmail(), user.getPassword(), roles);
+        return new SaUser(user.getEmail(), user.getPassword(), roles, user.getUserId());
     }
 }

@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -26,23 +25,26 @@ public class JwtService {
     @Value("${security.jwt.issuer}")
     private String ISSUER;
 
-    public JwtResDto generateToken(UserDetails userDetails, String org) {
+    public JwtResDto generateToken(SaUser userDetails, String org) {
         var ms = new Date()
                 .toInstant()
                 .plus(TTL_MILLIS, ChronoUnit.MILLIS)
                 .toEpochMilli();
 
-        var token = Jwts
+        var builder = Jwts
                 .builder()
-                .claims(Map.of("authorities", userDetails.getAuthorities()))
-                .claim("org", org)
-                .subject(userDetails.getUsername())
+                .claims(Map.of("authorities", userDetails.getAuthorities()));
+
+        if (org != null) builder.claim("org", org);
+        if (userDetails.getUserId() != null) builder.claim("userId", userDetails.getUserId());
+
+        builder.subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(ms))
                 .issuer(ISSUER)
-                .signWith(getSecretKey())
-                .compact();
+                .signWith(getSecretKey());
 
+        var token = builder.compact();
         return new JwtResDto(token, ms / 1000);
     }
 
