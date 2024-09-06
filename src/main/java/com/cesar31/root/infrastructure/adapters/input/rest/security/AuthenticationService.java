@@ -1,5 +1,7 @@
 package com.cesar31.root.infrastructure.adapters.input.rest.security;
 
+import com.cesar31.root.application.ports.input.EmployeeUseCase;
+import com.cesar31.root.domain.Employee;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.AuthReqDto;
 import com.cesar31.root.infrastructure.adapters.input.rest.dto.JwtResDto;
 import jakarta.validation.ConstraintViolationException;
@@ -11,21 +13,25 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final EmployeeUseCase employeeUseCase;
     private final JwtService jwtService;
 
     public AuthenticationService(
             AuthenticationManager authenticationManager,
-            UserDetailsService userDetailsService,
+            UserDetailsService userDetailsService, EmployeeUseCase employeeUseCase,
             JwtService jwtService
     ) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
+        this.employeeUseCase = employeeUseCase;
         this.jwtService = jwtService;
     }
 
@@ -43,7 +49,12 @@ public class AuthenticationService {
             var authentication = authenticationManager.authenticate(authData);
             if (authentication.isAuthenticated()) {
                 var userDetails = userDetailsService.loadUserByUsername(authReq.getUsername());
-                return jwtService.generateToken(userDetails);
+                var employee = employeeUseCase.findByEmail(userDetails.getUsername());
+                var org = employee.map(Employee::getOrganization)
+                        .map(UUID::toString)
+                        .orElse("");
+
+                return jwtService.generateToken(userDetails, org);
             }
         } catch (Exception e) {
             log.error("Error:", e);

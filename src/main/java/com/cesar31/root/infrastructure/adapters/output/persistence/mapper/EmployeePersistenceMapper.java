@@ -20,6 +20,7 @@ public interface EmployeePersistenceMapper {
     @Mapping(source = "birthDate", target = "user.birthDate")
     @Mapping(source = "entryDate", target = "user.entryDate")
     @Mapping(source = "salary", target = "salary")
+    @Mapping(source = "organization", target = "organizationId")
     EmployeeEntity toEmployeeEntity(Employee employee);
     List<EmployeeEntity> toEmployeeEntityList(List<Employee> employees);
 

@@ -16,6 +16,8 @@ public interface EmployeeUseCase {
 
     Optional<Employee> findByUserId(UUID userId);
 
+    Optional<Employee> findByEmail(String email);
+
     Employee createEmployee(CreateEmployeeReqDto reqDto) throws ApplicationException;
 
     Employee updateEmployee(UUID userId, UpdateEmployeeReqDto reqDto) throws EntityNotFoundException, ApplicationException;

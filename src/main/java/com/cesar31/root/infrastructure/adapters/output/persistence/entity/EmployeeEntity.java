@@ -31,4 +31,7 @@ public class EmployeeEntity {
 
     @Column(name = "cur_salary")
     private BigDecimal salary;
+
+    @Column(name = "organization_id")
+    private UUID organizationId;
 }

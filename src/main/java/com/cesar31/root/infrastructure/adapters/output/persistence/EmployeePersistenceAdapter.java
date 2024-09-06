@@ -58,6 +58,12 @@ public class EmployeePersistenceAdapter implements EmployeeOutputPort {
     }
 
     @Override
+    public Optional<Employee> findByEmail(String email) {
+        return employeeEntityRepository.findByUser_Email(email)
+                .map(employeeMapper::toEmployee);
+    }
+
+    @Override
     public Employee save(Employee employee, List<UserRole> userRoles) {
         var employeeEntity = employeeMapper.toEmployeeEntity(employee);
         var roles = userRoleMapper.toUserRoleEntities(userRoles);

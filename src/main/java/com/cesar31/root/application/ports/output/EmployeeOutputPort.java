@@ -15,5 +15,7 @@ public interface EmployeeOutputPort {
 
     Boolean existsByEmail(String email, UUID userId);
 
+    Optional<Employee> findByEmail(String email);
+
     Employee save(Employee user, List<UserRole> userRoles);
 }

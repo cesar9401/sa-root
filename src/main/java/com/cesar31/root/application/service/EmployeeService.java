@@ -44,6 +44,11 @@ public class EmployeeService implements EmployeeUseCase {
     }
 
     @Override
+    public Optional<Employee> findByEmail(String email) {
+        return employeeOutputPort.findByEmail(email);
+    }
+
+    @Override
     public Employee createEmployee(CreateEmployeeReqDto reqDto) throws ApplicationException {
         // validate
         reqDto.validateSelf();
