@@ -8,6 +8,7 @@ import com.cesar31.root.application.ports.input.RolesByUserIdUseCase;
 import com.cesar31.root.application.ports.input.UserByEmailUseCase;
 import com.cesar31.root.application.ports.output.ClientOutputPort;
 import com.cesar31.root.application.ports.output.CurrentUserOutputPort;
+import com.cesar31.root.application.ports.output.ExistsOrgOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.ports.output.RoleByUserIdPort;
 import com.cesar31.root.application.ports.output.RoleOutputPort;
@@ -20,7 +21,6 @@ import com.cesar31.root.application.service.RolesByUserService;
 import com.cesar31.root.application.service.UserByEmailService;
 import com.cesar31.root.application.service.EmployeeService;
 import com.cesar31.root.application.ports.input.EmployeeUseCase;
-import com.cesar31.root.infrastructure.adapters.output.feignclient.ExistsOrgFeignClientAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +36,7 @@ public class BeanConfiguration {
             final PasswordEncoderPort passwordEncoderPort,
             final EmployeeMapper mapper,
             final CurrentUserOutputPort currentUserOutputPort,
-            final ExistsOrgFeignClientAdapter existsOrgFeignClientAdapter
+            final ExistsOrgOutputPort existsOrgOutputPort
             ) {
         return new EmployeeService(
                 employeeOutputPort,
@@ -44,7 +44,7 @@ public class BeanConfiguration {
                 passwordEncoderPort,
                 mapper,
                 currentUserOutputPort,
-                existsOrgFeignClientAdapter
+                existsOrgOutputPort
         );
     }
 
