@@ -1,5 +1,6 @@
 package com.cesar31.root.application.service;
 
+import com.cesar31.root.application.exception.ForbiddenException;
 import com.cesar31.root.application.ports.input.EmployeeUseCase;
 import com.cesar31.root.application.ports.output.CurrentUserOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
@@ -15,6 +16,7 @@ import com.cesar31.root.application.ports.output.EmployeeOutputPort;
 import com.cesar31.root.domain.UserRole;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,6 +29,7 @@ public class EmployeeService implements EmployeeUseCase {
     private final PasswordEncoderPort passwordEncoderPort;
     private final EmployeeMapper mapper;
     private final CurrentUserOutputPort currentUserOutputPort;
+    private final Set<UUID> rolesAllowed = Set.of(RoleEnum.EMPLOYEE.roleId, RoleEnum.ROOT.roleId);
 
     public EmployeeService(
             EmployeeOutputPort employeeOutputPort,
@@ -58,12 +61,16 @@ public class EmployeeService implements EmployeeUseCase {
     }
 
     @Override
-    public Employee createEmployee(CreateEmployeeReqDto reqDto) throws ApplicationException {
+    public Employee createEmployee(CreateEmployeeReqDto reqDto) throws Exception {
         // validate
         reqDto.validateSelf();
 
+        // test if forbidden
+        testForbidden(reqDto.getRoles());
+
         var userByEmail = employeeOutputPort.existsByEmail(reqDto.getEmail(), null);
         if (userByEmail) throw new ApplicationException("email_already_exists");
+
         var user = mapper.toEmployee(reqDto);
         user.setPassword(passwordEncoderPort.encode(reqDto.getPassword()));
         user.setUserId(UUID.randomUUID());
@@ -71,13 +78,16 @@ public class EmployeeService implements EmployeeUseCase {
         user.setOrganization(currentUserOutputPort.getOrganizationId());
 
         var employeeRoles = getDefaultRoles(user, reqDto.getRoles());
-        return employeeOutputPort.save(user, employeeRoles);
+        return employeeOutputPort.save(user, new ArrayList<>(employeeRoles));
     }
 
     @Override
-    public Employee updateEmployee(UUID userId, UpdateEmployeeReqDto reqDto) throws EntityNotFoundException, ApplicationException {
+    public Employee updateEmployee(UUID userId, UpdateEmployeeReqDto reqDto) throws Exception {
         // validate
         reqDto.validateSelf();
+
+        // test if forbidden
+        testForbidden(reqDto.getRoles());
 
         var userById = employeeOutputPort.findById(userId);
         if (userById.isEmpty()) throw new EntityNotFoundException("user_not_found");
@@ -95,6 +105,23 @@ public class EmployeeService implements EmployeeUseCase {
 
         var employeeRoles = getDefaultRoles(user, reqDto.getRoles());
         return employeeOutputPort.save(user, employeeRoles);
+    }
+
+    private void testForbidden(Set<UUID> roles) throws ForbiddenException {
+        var isEmployeeOrRoot = currentUserOutputPort.hasAnyRole(rolesAllowed);
+        if (!isEmployeeOrRoot) throw new ForbiddenException("not_allowed_to_update_employee");
+
+        var isRoot = currentUserOutputPort.hasRole(RoleEnum.ROOT.roleId);
+        if (roles.contains(RoleEnum.ROOT.roleId) && !isRoot)
+            throw new ForbiddenException("not_allowed_to_add_root_role");
+
+        var isRestManager = currentUserOutputPort.hasRole(RoleEnum.RESTAURANT_MANAGER.roleId);
+        if (roles.contains(RoleEnum.RESTAURANT_MANAGER.roleId) && !isRoot && !isRestManager)
+            throw new ForbiddenException("not_allowed_to_add_restaurant_role");
+
+        var isHotelManager = currentUserOutputPort.hasRole(RoleEnum.HOTEL_MANAGER.roleId);
+        if (roles.contains(RoleEnum.HOTEL_MANAGER.roleId) && !isRoot && !isHotelManager)
+            throw new ForbiddenException("not_allowed_to_add_hotel_role");
     }
 
     private List<UserRole> getDefaultRoles(Employee employee, Set<UUID> roles) {

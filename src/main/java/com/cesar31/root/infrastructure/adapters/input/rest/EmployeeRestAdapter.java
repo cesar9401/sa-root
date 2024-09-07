@@ -2,8 +2,6 @@ package com.cesar31.root.infrastructure.adapters.input.rest;
 
 import com.cesar31.root.application.dto.CreateEmployeeReqDto;
 import com.cesar31.root.application.dto.UpdateEmployeeReqDto;
-import com.cesar31.root.application.exception.EntityNotFoundException;
-import com.cesar31.root.application.exception.ApplicationException;
 import com.cesar31.root.domain.Employee;
 import com.cesar31.root.application.ports.input.EmployeeUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,14 +30,14 @@ public class EmployeeRestAdapter {
 
     @GetMapping
     @Operation(description = "Find all employees.")
-    public ResponseEntity<List<Employee>> findAll() {
-        var employees = employeeUseCase.findAll();
+    public ResponseEntity<List<Employee>> findAll() throws Exception {
+        List<Employee> employees = employeeUseCase.findAll();
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping("{userId}")
     @Operation(description = "Get any employee by id.")
-    public ResponseEntity<Employee> getUser(@PathVariable("userId") UUID id) {
+    public ResponseEntity<Employee> getUser(@PathVariable("userId") UUID id) throws Exception {
         return employeeUseCase.findByUserId(id)
                 .map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -47,14 +45,14 @@ public class EmployeeRestAdapter {
 
     @PostMapping
     @Operation(description = "Create a new user.")
-    public ResponseEntity<Employee> create(@RequestBody CreateEmployeeReqDto reqDto) throws ApplicationException {
+    public ResponseEntity<Employee> create(@RequestBody CreateEmployeeReqDto reqDto) throws Exception {
         var newUser = employeeUseCase.createEmployee(reqDto);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @PutMapping("{userId}")
     @Operation(description = "Update any user by its id.")
-    public ResponseEntity<Employee> update(@PathVariable("userId") UUID userId, @RequestBody UpdateEmployeeReqDto reqDto) throws EntityNotFoundException, ApplicationException {
+    public ResponseEntity<Employee> update(@PathVariable("userId") UUID userId, @RequestBody UpdateEmployeeReqDto reqDto) throws Exception {
         var updatedUser = employeeUseCase.updateEmployee(userId, reqDto);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }

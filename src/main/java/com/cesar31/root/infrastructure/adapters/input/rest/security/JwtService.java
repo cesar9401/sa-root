@@ -25,7 +25,7 @@ public class JwtService {
     @Value("${security.jwt.issuer}")
     private String ISSUER;
 
-    public JwtResDto generateToken(SaUser userDetails, String org) {
+    public JwtResDto generateToken(SaUser userDetails, String orgId) {
         var ms = new Date()
                 .toInstant()
                 .plus(TTL_MILLIS, ChronoUnit.MILLIS)
@@ -35,7 +35,7 @@ public class JwtService {
                 .builder()
                 .claims(Map.of("authorities", userDetails.getAuthorities()));
 
-        if (org != null) builder.claim("org", org);
+        if (orgId != null) builder.claim("orgId", orgId);
         if (userDetails.getUserId() != null) builder.claim("userId", userDetails.getUserId());
 
         builder.subject(userDetails.getUsername())

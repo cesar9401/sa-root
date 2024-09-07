@@ -5,20 +5,41 @@ import com.cesar31.root.infrastructure.adapters.input.rest.security.SaAuthentica
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Component
 public class CurrentUserAdapter implements CurrentUserOutputPort {
 
+    private SaAuthenticationToken getSaAuthenticationToken() {
+        return (SaAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    }
+
     @Override
     public UUID getUserId() {
-        SaAuthenticationToken authentication = (SaAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        var authentication = getSaAuthenticationToken();
         return authentication.getUserId();
     }
 
     @Override
     public UUID getOrganizationId() {
-        SaAuthenticationToken authentication = (SaAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        var authentication = getSaAuthenticationToken();
         return authentication.getOrganizationId();
+    }
+
+    @Override
+    public Boolean hasRole(UUID roleId) {
+        var authentication = getSaAuthenticationToken();
+        return authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals(roleId.toString()));
+    }
+
+    @Override
+    public Boolean hasAnyRole(Set<UUID> roleIds) {
+        var authentication = getSaAuthenticationToken();
+        return authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> roleIds.contains(UUID.fromString(a.getAuthority())));
     }
 }
