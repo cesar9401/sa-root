@@ -43,4 +43,6 @@ public class CreateEmployeeReqDto extends SelfValidating {
 
     @NotNull
     private Set<UUID> roles;
+
+    private UUID organizationId;
 }

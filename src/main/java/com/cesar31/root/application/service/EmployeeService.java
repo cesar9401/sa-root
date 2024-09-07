@@ -3,6 +3,7 @@ package com.cesar31.root.application.service;
 import com.cesar31.root.application.exception.ForbiddenException;
 import com.cesar31.root.application.ports.input.EmployeeUseCase;
 import com.cesar31.root.application.ports.output.CurrentUserOutputPort;
+import com.cesar31.root.application.ports.output.ExistsOrgOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.dto.CreateEmployeeReqDto;
 import com.cesar31.root.application.dto.UpdateEmployeeReqDto;
@@ -29,6 +30,8 @@ public class EmployeeService implements EmployeeUseCase {
     private final PasswordEncoderPort passwordEncoderPort;
     private final EmployeeMapper mapper;
     private final CurrentUserOutputPort currentUserOutputPort;
+    private final ExistsOrgOutputPort existsOrgOutputPort;
+
     private final Set<UUID> rolesAllowed = Set.of(RoleEnum.EMPLOYEE.roleId, RoleEnum.ROOT.roleId);
 
     public EmployeeService(
@@ -36,13 +39,14 @@ public class EmployeeService implements EmployeeUseCase {
             RoleOutputPort roleOutputPort,
             PasswordEncoderPort passwordEncoderPort,
             EmployeeMapper mapper,
-            CurrentUserOutputPort currentUserOutputPort
+            CurrentUserOutputPort currentUserOutputPort, ExistsOrgOutputPort existsOrgOutputPort
     ) {
         this.employeeOutputPort = employeeOutputPort;
         this.roleOutputPort = roleOutputPort;
         this.passwordEncoderPort = passwordEncoderPort;
         this.mapper = mapper;
         this.currentUserOutputPort = currentUserOutputPort;
+        this.existsOrgOutputPort = existsOrgOutputPort;
     }
 
     @Override
@@ -75,7 +79,23 @@ public class EmployeeService implements EmployeeUseCase {
         user.setPassword(passwordEncoderPort.encode(reqDto.getPassword()));
         user.setUserId(UUID.randomUUID());
         user.setEntryDate(LocalDateTime.now());
-        user.setOrganization(currentUserOutputPort.getOrganizationId());
+
+        var orgId = reqDto.getOrganizationId();
+        var defaultOrg = currentUserOutputPort.getOrganizationId();
+        System.out.println("is null:");
+        System.out.println(orgId);
+
+        if (orgId != null && orgId.compareTo(defaultOrg) != 0) {
+            var isRoot = currentUserOutputPort.hasRole(RoleEnum.ROOT.roleId);
+            if (!isRoot) throw new ForbiddenException("not_allowed_to_select_org");
+
+            var existsOrg = existsOrgOutputPort.existsOrganizationById(orgId);
+            if (!existsOrg) throw new EntityNotFoundException("organization_not_found");
+
+            user.setOrganization(orgId);
+        } else {
+            user.setOrganization(defaultOrg);
+        }
 
         var employeeRoles = getDefaultRoles(user, reqDto.getRoles());
         return employeeOutputPort.save(user, new ArrayList<>(employeeRoles));

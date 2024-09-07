@@ -14,6 +14,7 @@ public interface EmployeeMapper {
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "lastName", target = "lastName")
     @Mapping(source = "birthDate", target = "birthDate")
+    @Mapping(source = "organizationId", target = "organization")
     Employee toEmployee(CreateEmployeeReqDto reqDto);
 
     @Mapping(source = "employeeId", target = "userId")
