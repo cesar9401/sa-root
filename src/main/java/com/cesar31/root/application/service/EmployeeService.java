@@ -1,6 +1,7 @@
 package com.cesar31.root.application.service;
 
 import com.cesar31.root.application.ports.input.EmployeeUseCase;
+import com.cesar31.root.application.ports.output.CurrentUserOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.dto.CreateEmployeeReqDto;
 import com.cesar31.root.application.dto.UpdateEmployeeReqDto;
@@ -25,12 +26,20 @@ public class EmployeeService implements EmployeeUseCase {
     private final RoleOutputPort roleOutputPort;
     private final PasswordEncoderPort passwordEncoderPort;
     private final EmployeeMapper mapper;
+    private final CurrentUserOutputPort currentUserOutputPort;
 
-    public EmployeeService(EmployeeOutputPort employeeOutputPort, RoleOutputPort roleOutputPort, PasswordEncoderPort passwordEncoderPort, EmployeeMapper mapper) {
+    public EmployeeService(
+            EmployeeOutputPort employeeOutputPort,
+            RoleOutputPort roleOutputPort,
+            PasswordEncoderPort passwordEncoderPort,
+            EmployeeMapper mapper,
+            CurrentUserOutputPort currentUserOutputPort
+    ) {
         this.employeeOutputPort = employeeOutputPort;
         this.roleOutputPort = roleOutputPort;
         this.passwordEncoderPort = passwordEncoderPort;
         this.mapper = mapper;
+        this.currentUserOutputPort = currentUserOutputPort;
     }
 
     @Override
@@ -59,6 +68,7 @@ public class EmployeeService implements EmployeeUseCase {
         user.setPassword(passwordEncoderPort.encode(reqDto.getPassword()));
         user.setUserId(UUID.randomUUID());
         user.setEntryDate(LocalDateTime.now());
+        user.setOrganization(currentUserOutputPort.getOrganizationId());
 
         var employeeRoles = getDefaultRoles(user, reqDto.getRoles());
         return employeeOutputPort.save(user, employeeRoles);
@@ -81,6 +91,7 @@ public class EmployeeService implements EmployeeUseCase {
         var user = mapper.toEmployee(reqDto);
         user.setPassword(originalUser.getPassword());
         user.setEntryDate(originalUser.getEntryDate());
+        user.setOrganization(originalUser.getOrganization());
 
         var employeeRoles = getDefaultRoles(user, reqDto.getRoles());
         return employeeOutputPort.save(user, employeeRoles);

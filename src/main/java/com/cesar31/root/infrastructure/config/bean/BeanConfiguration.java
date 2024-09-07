@@ -7,6 +7,7 @@ import com.cesar31.root.application.ports.input.RoleUseCase;
 import com.cesar31.root.application.ports.input.RolesByUserIdUseCase;
 import com.cesar31.root.application.ports.input.UserByEmailUseCase;
 import com.cesar31.root.application.ports.output.ClientOutputPort;
+import com.cesar31.root.application.ports.output.CurrentUserOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.ports.output.RoleByUserIdPort;
 import com.cesar31.root.application.ports.output.RoleOutputPort;
@@ -28,12 +29,29 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    EmployeeUseCase userService(final EmployeeOutputPort employeeOutputPort, final RoleOutputPort roleOutputPort, final PasswordEncoderPort passwordEncoderPort, final EmployeeMapper mapper) {
-        return new EmployeeService(employeeOutputPort, roleOutputPort, passwordEncoderPort, mapper);
+    EmployeeUseCase userService(
+            final EmployeeOutputPort employeeOutputPort,
+            final RoleOutputPort roleOutputPort,
+            final PasswordEncoderPort passwordEncoderPort,
+            final EmployeeMapper mapper,
+            final CurrentUserOutputPort currentUserOutputPort
+    ) {
+        return new EmployeeService(
+                employeeOutputPort,
+                roleOutputPort,
+                passwordEncoderPort,
+                mapper,
+                currentUserOutputPort
+        );
     }
 
     @Bean
-    ClientUseCase clientService(final ClientOutputPort clientOutputPort, final RoleOutputPort roleOutputPort, final PasswordEncoderPort passwordEncoderPort, final ClientMapper mapper) {
+    ClientUseCase clientService(
+            final ClientOutputPort clientOutputPort,
+            final RoleOutputPort roleOutputPort,
+            final PasswordEncoderPort passwordEncoderPort,
+            final ClientMapper mapper
+    ) {
         return new ClientService(clientOutputPort, roleOutputPort, passwordEncoderPort, mapper);
     }
 
