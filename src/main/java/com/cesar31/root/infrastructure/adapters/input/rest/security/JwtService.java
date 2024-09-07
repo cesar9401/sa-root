@@ -59,7 +59,7 @@ public class JwtService {
         return new Date().before(expiration);
     }
 
-    private Claims extractClaims(String token) {
+    public Claims extractClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSecretKey())
                 .build()
