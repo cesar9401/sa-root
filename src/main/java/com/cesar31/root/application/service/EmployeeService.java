@@ -3,7 +3,6 @@ package com.cesar31.root.application.service;
 import com.cesar31.root.application.exception.ForbiddenException;
 import com.cesar31.root.application.ports.input.EmployeeUseCase;
 import com.cesar31.root.application.ports.output.CurrentUserOutputPort;
-import com.cesar31.root.application.ports.output.ExistsOrgOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.dto.CreateEmployeeReqDto;
 import com.cesar31.root.application.dto.UpdateEmployeeReqDto;
@@ -15,6 +14,7 @@ import com.cesar31.root.application.util.enums.RoleEnum;
 import com.cesar31.root.domain.Employee;
 import com.cesar31.root.application.ports.output.EmployeeOutputPort;
 import com.cesar31.root.domain.UserRole;
+import com.cesar31.root.infrastructure.adapters.output.feignclient.ExistsOrgFeignClientAdapter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class EmployeeService implements EmployeeUseCase {
     private final PasswordEncoderPort passwordEncoderPort;
     private final EmployeeMapper mapper;
     private final CurrentUserOutputPort currentUserOutputPort;
-    private final ExistsOrgOutputPort existsOrgOutputPort;
+    private final ExistsOrgFeignClientAdapter existsOrgFeignClientAdapter;
 
     private final Set<UUID> rolesAllowed = Set.of(RoleEnum.EMPLOYEE.roleId, RoleEnum.ROOT.roleId);
 
@@ -39,14 +39,15 @@ public class EmployeeService implements EmployeeUseCase {
             RoleOutputPort roleOutputPort,
             PasswordEncoderPort passwordEncoderPort,
             EmployeeMapper mapper,
-            CurrentUserOutputPort currentUserOutputPort, ExistsOrgOutputPort existsOrgOutputPort
+            CurrentUserOutputPort currentUserOutputPort,
+            ExistsOrgFeignClientAdapter existsOrgFeignClientAdapter
     ) {
         this.employeeOutputPort = employeeOutputPort;
         this.roleOutputPort = roleOutputPort;
         this.passwordEncoderPort = passwordEncoderPort;
         this.mapper = mapper;
         this.currentUserOutputPort = currentUserOutputPort;
-        this.existsOrgOutputPort = existsOrgOutputPort;
+        this.existsOrgFeignClientAdapter = existsOrgFeignClientAdapter;
     }
 
     @Override
@@ -89,7 +90,9 @@ public class EmployeeService implements EmployeeUseCase {
             var isRoot = currentUserOutputPort.hasRole(RoleEnum.ROOT.roleId);
             if (!isRoot) throw new ForbiddenException("not_allowed_to_select_org");
 
-            var existsOrg = existsOrgOutputPort.existsOrganizationById(orgId);
+            // TODO: add feign client here
+            // var existsOrg = existsOrgOutputPort.existsOrganizationById(orgId);
+            var existsOrg = existsOrgFeignClientAdapter.existsOrgById(orgId);
             if (!existsOrg) throw new EntityNotFoundException("organization_not_found");
 
             user.setOrganization(orgId);
