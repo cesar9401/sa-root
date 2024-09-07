@@ -32,7 +32,7 @@ public class EmployeeService implements EmployeeUseCase {
     private final CurrentUserOutputPort currentUserOutputPort;
     private final ExistsOrgOutputPort existsOrgOutputPort;
 
-    private final Set<UUID> rolesAllowed = Set.of(RoleEnum.EMPLOYEE.roleId, RoleEnum.ROOT.roleId);
+    private final Set<UUID> allowedRoles = Set.of(RoleEnum.EMPLOYEE.roleId, RoleEnum.ROOT.roleId);
 
     public EmployeeService(
             EmployeeOutputPort employeeOutputPort,
@@ -126,7 +126,7 @@ public class EmployeeService implements EmployeeUseCase {
     }
 
     private void testForbidden(Set<UUID> roles) throws ForbiddenException {
-        var isEmployeeOrRoot = currentUserOutputPort.hasAnyRole(rolesAllowed);
+        var isEmployeeOrRoot = currentUserOutputPort.hasAnyRole(allowedRoles);
         if (!isEmployeeOrRoot) throw new ForbiddenException("not_allowed_to_update_employee");
 
         var isRoot = currentUserOutputPort.hasRole(RoleEnum.ROOT.roleId);
