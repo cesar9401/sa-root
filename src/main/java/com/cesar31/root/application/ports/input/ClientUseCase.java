@@ -16,7 +16,7 @@ public interface ClientUseCase {
 
     Optional<Client> findById(UUID clientId);
 
-    Client save(CreateClientReqDto createClientReqDto) throws ApplicationException;
+    Client save(CreateClientReqDto createClientReqDto) throws Exception;
 
-    Client update(UUID id, UpdateClientReqDto updateClientReqDto) throws ApplicationException, EntityNotFoundException;
+    Client update(UUID id, UpdateClientReqDto updateClientReqDto) throws Exception;
 }

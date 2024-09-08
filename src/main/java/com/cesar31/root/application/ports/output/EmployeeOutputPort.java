@@ -9,9 +9,9 @@ import java.util.UUID;
 
 public interface EmployeeOutputPort {
 
-    List<Employee> findAll();
+    List<Employee> findAll(UUID organizationId);
 
-    Optional<Employee> findById(UUID userId);
+    Optional<Employee> findByIdAndOrganizationId(UUID userId, UUID organizationId);
 
     Boolean existsByEmail(String email, UUID userId);
 

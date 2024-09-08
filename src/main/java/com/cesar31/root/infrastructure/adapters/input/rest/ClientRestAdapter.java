@@ -48,13 +48,18 @@ public class ClientRestAdapter {
     @PostMapping
     @Operation(description = "Create a new client")
     public ResponseEntity<Client> create(@RequestBody CreateClientReqDto reqDto) throws ApplicationException {
-        var newClient = clientUseCase.save(reqDto);
+        Client newClient = null;
+        try {
+            newClient = clientUseCase.save(reqDto);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
         return new ResponseEntity<>(newClient, HttpStatus.CREATED);
     }
 
     @PutMapping("{clientId}")
     @Operation(description = "Update any client by its id.")
-    public ResponseEntity<Client> update(@PathVariable("clientId") UUID clientId, @RequestBody UpdateClientReqDto reqDto) throws ApplicationException, EntityNotFoundException {
+    public ResponseEntity<Client> update(@PathVariable("clientId") UUID clientId, @RequestBody UpdateClientReqDto reqDto) throws Exception {
         var updatedClient = clientUseCase.update(clientId, reqDto);
         return ResponseEntity.ok(updatedClient);
     }

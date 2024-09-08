@@ -34,7 +34,7 @@ public class EmployeePersistenceAdapter implements EmployeeOutputPort {
     }
 
     @Override
-    public List<Employee> findAll() {
+    public List<Employee> findAll(UUID organizationId) {
         return employeeEntityRepository.findAll()
                 .stream()
                 .map(employeeMapper::toEmployee)
@@ -42,9 +42,9 @@ public class EmployeePersistenceAdapter implements EmployeeOutputPort {
     }
 
     @Override
-    public Optional<Employee> findById(UUID userId) {
+    public Optional<Employee> findByIdAndOrganizationId(UUID userId, UUID organizationId) {
         return employeeEntityRepository
-                .findById(userId)
+                .findByEmployeeIdAndOrganizationId(userId, organizationId)
                 .map(employeeMapper::toEmployee);
     }
 

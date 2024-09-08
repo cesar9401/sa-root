@@ -51,12 +51,12 @@ public class EmployeeService implements EmployeeUseCase {
 
     @Override
     public List<Employee> findAll() {
-        return employeeOutputPort.findAll();
+        return employeeOutputPort.findAll(currentUserOutputPort.getOrganizationId());
     }
 
     @Override
     public Optional<Employee> findByUserId(UUID userId) {
-        return employeeOutputPort.findById(userId);
+        return employeeOutputPort.findByIdAndOrganizationId(userId, currentUserOutputPort.getOrganizationId());
     }
 
     @Override
@@ -107,7 +107,7 @@ public class EmployeeService implements EmployeeUseCase {
         // test if forbidden
         testForbidden(reqDto.getRoles());
 
-        var userById = employeeOutputPort.findById(userId);
+        var userById = this.findByUserId(userId);
         if (userById.isEmpty()) throw new EntityNotFoundException("user_not_found");
 
         var originalUser = userById.get();

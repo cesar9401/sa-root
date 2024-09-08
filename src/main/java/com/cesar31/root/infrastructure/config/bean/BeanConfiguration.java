@@ -53,9 +53,10 @@ public class BeanConfiguration {
             final ClientOutputPort clientOutputPort,
             final RoleOutputPort roleOutputPort,
             final PasswordEncoderPort passwordEncoderPort,
-            final ClientMapper mapper
+            final ClientMapper mapper,
+            final CurrentUserOutputPort currentUserOutputPort
     ) {
-        return new ClientService(clientOutputPort, roleOutputPort, passwordEncoderPort, mapper);
+        return new ClientService(clientOutputPort, roleOutputPort, passwordEncoderPort, mapper, currentUserOutputPort);
     }
 
     @Bean

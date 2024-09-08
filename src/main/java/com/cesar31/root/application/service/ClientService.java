@@ -4,9 +4,11 @@ import com.cesar31.root.application.dto.CreateClientReqDto;
 import com.cesar31.root.application.dto.UpdateClientReqDto;
 import com.cesar31.root.application.exception.ApplicationException;
 import com.cesar31.root.application.exception.EntityNotFoundException;
+import com.cesar31.root.application.exception.ForbiddenException;
 import com.cesar31.root.application.mapper.ClientMapper;
 import com.cesar31.root.application.ports.input.ClientUseCase;
 import com.cesar31.root.application.ports.output.ClientOutputPort;
+import com.cesar31.root.application.ports.output.CurrentUserOutputPort;
 import com.cesar31.root.application.ports.output.PasswordEncoderPort;
 import com.cesar31.root.application.ports.output.RoleOutputPort;
 import com.cesar31.root.application.util.enums.RoleEnum;
@@ -16,6 +18,7 @@ import com.cesar31.root.domain.UserRole;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class ClientService implements ClientUseCase {
@@ -24,12 +27,22 @@ public class ClientService implements ClientUseCase {
     private final RoleOutputPort roleOutputPort;
     private final PasswordEncoderPort passwordEncoderPort;
     private final ClientMapper clientMapper;
+    private final CurrentUserOutputPort currentUserOutputPort;
 
-    public ClientService(ClientOutputPort clientOutputPort, RoleOutputPort roleOutputPort, PasswordEncoderPort passwordEncoderPort, ClientMapper clientMapper) {
+    private final Set<UUID> allowedRoles = Set.of(RoleEnum.ROOT.roleId, RoleEnum.EMPLOYEE.roleId);
+
+    public ClientService(
+            ClientOutputPort clientOutputPort,
+            RoleOutputPort roleOutputPort,
+            PasswordEncoderPort passwordEncoderPort,
+            ClientMapper clientMapper,
+            CurrentUserOutputPort currentUserOutputPort
+    ) {
         this.clientOutputPort = clientOutputPort;
         this.roleOutputPort = roleOutputPort;
         this.passwordEncoderPort = passwordEncoderPort;
         this.clientMapper = clientMapper;
+        this.currentUserOutputPort = currentUserOutputPort;
     }
 
     @Override
@@ -43,9 +56,12 @@ public class ClientService implements ClientUseCase {
     }
 
     @Override
-    public Client save(CreateClientReqDto createClientReqDto) throws ApplicationException {
+    public Client save(CreateClientReqDto createClientReqDto) throws Exception {
         // validate
         createClientReqDto.validateSelf();
+
+        var isRootOrEmployed = currentUserOutputPort.hasAnyRole(allowedRoles);
+        if (!isRootOrEmployed) throw new ForbiddenException("not_allowed_to_create_client");
 
         var client = clientMapper.toClient(createClientReqDto);
 
@@ -61,9 +77,12 @@ public class ClientService implements ClientUseCase {
     }
 
     @Override
-    public Client update(UUID clientId, UpdateClientReqDto updateClientReqDto) throws ApplicationException, EntityNotFoundException {
+    public Client update(UUID clientId, UpdateClientReqDto updateClientReqDto) throws ApplicationException, EntityNotFoundException, ForbiddenException {
         // validate
         updateClientReqDto.validateSelf();
+
+        var isRootOrEmployed = currentUserOutputPort.hasAnyRole(allowedRoles);
+        if (!isRootOrEmployed) throw new ForbiddenException("not_allowed_to_update_client");
 
         var clientById = findById(clientId);
         if (clientById.isEmpty()) throw new EntityNotFoundException("client_not_found");
