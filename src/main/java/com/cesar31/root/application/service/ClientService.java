@@ -56,6 +56,11 @@ public class ClientService implements ClientUseCase {
     }
 
     @Override
+    public Boolean existsById(UUID clientId) {
+        return this.findById(clientId).isPresent();
+    }
+
+    @Override
     public Client save(CreateClientReqDto createClientReqDto) throws Exception {
         // validate
         createClientReqDto.validateSelf();

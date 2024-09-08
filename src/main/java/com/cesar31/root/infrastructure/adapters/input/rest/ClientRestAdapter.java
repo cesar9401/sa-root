@@ -3,7 +3,6 @@ package com.cesar31.root.infrastructure.adapters.input.rest;
 import com.cesar31.root.application.dto.CreateClientReqDto;
 import com.cesar31.root.application.dto.UpdateClientReqDto;
 import com.cesar31.root.application.exception.ApplicationException;
-import com.cesar31.root.application.exception.EntityNotFoundException;
 import com.cesar31.root.application.ports.input.ClientUseCase;
 import com.cesar31.root.domain.Client;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,6 +42,12 @@ public class ClientRestAdapter {
         return clientUseCase.findById(clientId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("exists/{clientId}")
+    public ResponseEntity<Boolean> existsByClientId(@PathVariable("clientId") UUID clientId) {
+        var exists = clientUseCase.existsById(clientId);
+        return ResponseEntity.ok(exists);
     }
 
     @PostMapping

@@ -16,6 +16,8 @@ public interface ClientUseCase {
 
     Optional<Client> findById(UUID clientId);
 
+    Boolean existsById(UUID clientId);
+
     Client save(CreateClientReqDto createClientReqDto) throws Exception;
 
     Client update(UUID id, UpdateClientReqDto updateClientReqDto) throws Exception;
